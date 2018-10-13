@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Two of a Kind</title>
+		
+		<style>
+			body {
+				width:99%;
+				font-family:Arial;
+			}
+			
+			#cal {
+				margin:auto;
+				text-align:center;
+				width:80%;
+			}
+			
+			thead {
+				height:1000px;
+			}
+			
+			p {
+				text-align:center;
+			}
+			
+			#top {
+				font-size:30px;
+				height:100px;
+			}
+			
+			#days {
+				font-size:20px;
+				height:50px;
+			}
+			
+			th, .square {
+				width:100px;
+				border:2px solid black;
+			}
+			
+			.squaretable {
+				width:100%;
+			}
+			
+			.small {
+				height:30px;
+				text-align:left;
+			}
+			
+			.large {
+				height:90px;
+				text-align:center;
+			}
+			
+			.change:hover {
+				cursor:pointer;
+				transition:background-color 2s;
+				background-color:#F0F0F0;
+			}
+			
+			#gray {
+				background-color:lightgrey;
+			}
+		</style>
+		
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	</head>
+	
+	<body>
+		<table id="cal">
+		</table>
+		
+		<br/><br/>
+		
+		<p>Two Of A Kind - Mark Goodman and Mike Folk</p>
+		<p>Contact us: <a href="mailto:goodmanshealthfoods@gmail.com">goodmanshealthfoods@gmail.com</a></p>
+		
+		<script>
+			var dates = [];
+			var locations = [];
+			var times = [];
+			
+			var d = new Date();
+			var current_day = d.getDay();
+			var current_date = d.getDate();
+			var current_month = d.getMonth();
+			var current_year = d.getFullYear();
+			
+			var day = current_day;
+			var date = current_date;
+			var month = current_month;
+			var year = current_year;
+			
+			function twoDigits(num) {
+				if (num < 10) {
+					return "0" + num.toString();
+				} else {
+					return num.toString();
+				}
+			}
+			
+			function runCalendar(day, date, month, year) {			
+				
+				document.getElementById("cal").innerHTML = '<tr id="top"> \
+						<th colspan=2" onclick=\'changeMonth(-1)\' class="change">&lt;</th> \
+						<th colspan=3 id="monthyear"></th> \
+						<th colspan=2 onclick=\'changeMonth(1)\' class="change">&gt;</th> \
+					</tr> \
+					<tr id="days"> \
+						<th>Sunday</th> \
+						<th>Monday</th> \
+						<th>Tuesday</th> \
+						<th>Wednesday</th> \
+						<th>Thursday</th> \
+						<th>Friday</th> \
+						<th>Saturday</th> \
+					</tr> \
+					<tr id="week1"></tr> \
+					<tr id="week2"></tr> \
+					<tr id="week3"></tr> \
+					<tr id="week4"></tr> \
+					<tr id="week5"></tr> \
+					<tr id="week6"></tr>';
+				
+				var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+				var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+				var monthDays = ["31","28","31","30","31","30","31","31","30","31","30","31"];
+				
+				document.getElementById("monthyear").innerHTML = months[month] + " " + year.toString();
+				
+				var dayOne = (day + 36 - date) % 7;
+				
+				var workingDate = 0;
+				for (var c = 0; c < 7; c++) { // For each of the first 7 calendar spots
+					var current = document.getElementById("week1").innerHTML;
+					
+					if (c >= dayOne) {
+						workingDate++;
+						var writtenDate = twoDigits(month + 1) + "/" + twoDigits(workingDate) + "/" + year.toString();
+						
+						var addition = "&nbsp;";
+						if (dates.indexOf(writtenDate) != -1) {
+							var gigNum = dates.indexOf(writtenDate);
+							addition = locations[gigNum] + " @ " + times[gigNum];
+						}
+						
+						var id = "white";
+						if (month == current_month && year == current_year && workingDate <= current_date) {
+							id = "gray";
+						}
+						
+						document.getElementById("week1").innerHTML = current + "<td class='square' id='" + id + "'><table class='squaretable'><tr class='small'><td>" + (1 + c - dayOne).toString() + "</td></tr><tr class='large'><td>" + addition + "</td></tr></table></td>";
+						
+					} else {
+						document.getElementById("week1").innerHTML = current + "<td></td>";
+					}
+				}
+				
+				for (var week = 2; week <= 6; week++) { // For each of the following weeks
+					for (var c = 0; c < 7; c++) {
+						workingDate++;
+						var writtenDate = twoDigits(month + 1) + "/" + twoDigits(workingDate) + "/" + year.toString();
+						
+						var addition = "&nbsp;";
+						if (dates.indexOf(writtenDate) != -1) {
+							var gigNum = dates.indexOf(writtenDate);
+							addition = locations[gigNum] + " @ " + times[gigNum];
+						}
+						
+						if (workingDate <= monthDays[month] || (year % 4 == 0 && month == 1 && workingDate == 29)) {
+							var current = document.getElementById("week" + week.toString()).innerHTML;
+							
+							var id = "white";
+							if (month == current_month && year == current_year && workingDate <= current_date) {
+								id = "gray";
+							}
+							
+							document.getElementById("week" + week.toString()).innerHTML = current + "<td class='square' id='" + id + "'><table class='squaretable'><tr class='small'><td>" + workingDate.toString() + "</td></tr><tr class='large'><td>" + addition + "</td></tr></table></td>";
+						}
+					}
+				}
+			}
+			
+			function changeMonth(amount) {
+				// Check if new month is earlier than the current month
+				var potential_month = (month + amount + 12) % 12;
+				var potential_year = year;
+				
+				if ((month == 0 && amount == -1) || (month == 11 && amount == 1)) {
+					potential_year = year + amount;
+				}
+				
+				// If it is not, update the calendar to match
+				if (potential_month >= current_month || potential_year > current_year) {
+					month = potential_month;
+					year = potential_year;
+					
+					var newDate = new Date(year,month,1,9,0,0,0);
+					
+					runCalendar(newDate.getDay(),1,month,year);
+				}
+			}
+			
+			runCalendar(day, date, month, year);
+			
+			google.load("visualization", "1", {packages:["corechart"]});
+			google.setOnLoadCallback(drawSheetName);
+
+			function drawSheetName() {
+				//Selects the columns to be extracted
+				var queryString = encodeURIComponent('SELECT A, B, C, D');
+
+				//Change headers=1 to headers=0 to include the first row
+				var query = new google.visualization.Query('https://docs.google.com/spreadsheets/d/1cP83X0GBzgirSm4i0krJQIxDohVcXzX2FkLLWriichY/gviz/tq?gid=0&headers=1&tq=' + queryString); 
+				query.send(handleSampleDataQueryResponse);
+			}
+
+			function handleSampleDataQueryResponse(response) {
+				var data = response.getDataTable();
+				var total = data.getValue(0,3);
+				
+				for (var i = 0; i < total; i++) {
+					dates.push(data.getValue(i,0));
+					locations.push(data.getValue(i,1));
+					times.push(data.getValue(i,2));
+				}
+				
+				runCalendar(day, date, month, year);
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>DGCubes PBs/Mains/Methods</title>
+
+		<meta charset="UTF-8">
+		<meta name="description" content="Here you can find my mains, personal bests, and methods for every WCA event.">
+		<meta name="keywords" content="Cubing,Rubik's Cube,Speedcubing,Speedsolving,Rubik's,Rubix,DGCubes,Cube,Daniel Goodman,Cuber,Speedcuber,YouTube">
+		<meta name="author" content="Daniel Goodman">
+
+		<link rel="stylesheet" type="text/css" href="../DGCubes.css" />
+		<link rel="shortcut icon" href="../SharedPictures/DGCubes.ico">
+		
+		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		<script>
+		  (adsbygoogle = window.adsbygoogle || []).push({
+			google_ad_client: "ca-pub-7286368824593546",
+			enable_page_level_ads: true
+		  });
+		</script>
+
+		<!--CODE ADAPTED FROM https://productforums.google.com/forum/#!topic/docs/RMKFBdfd3t4-->
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<script type="text/javascript">
+			google.load("visualization", "1", {packages:["corechart"]});
+			google.setOnLoadCallback(drawSheetName);
+
+			function drawSheetName() {
+				//Selects the columns to be extracted
+				var queryString = encodeURIComponent('SELECT B, C, J, K, L');
+
+				//Change headers=1 to headers=0 to include the first row
+				var query = new google.visualization.Query('https://docs.google.com/spreadsheets/d/1Bvyksa6J_25ciXkU69vmrVcp38jZO-ENuIqZANwJwIs/gviz/tq?gid=0&headers=1&tq=' + queryString); 
+				query.send(handleSampleDataQueryResponse);
+			}
+
+			function handleSampleDataQueryResponse(response) {
+				var data = response.getDataTable();
+				
+				var events = ["2x2","3x3","4x4","5x5","6x6","7x7","pyra","mega","sq1","sk","oh","bld","4bld","5bld","mbld","wf","fmc","cl"];
+
+				for(var i = 0; i < events.length; i++) {
+					var pb = data.getValue(i, 0); //0 is relative to the columns selected, not the columns in the sheet; in this case, 0 points to column B
+					document.getElementById(events[i] + "p").innerHTML = pb;
+					
+					var date = data.getValue(i, 1);
+					document.getElementById(events[i] + "d").innerHTML = date;
+					
+					var avg = data.getValue(i, 2);
+					document.getElementById(events[i] + "a").innerHTML = avg;
+					
+					var cube = data.getValue(i, 3);
+					document.getElementById(events[i] + "c").innerHTML = cube;
+					
+					var method = data.getValue(i, 4);
+					document.getElementById(events[i] + "m").innerHTML = method;
+				}
+			}
+		</script>
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+			ga('create', 'UA-96185710-1', 'auto');
+			ga('send', 'pageview');
+		</script>
+		
+		<!-- Sticky header code adapted from: https://stackoverflow.com/questions/14496240/how-can-i-stick-the-div-after-scrolling-down-a-little -->
+		<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+		
+		<script>
+			$(function(){
+				var stickyHeaderTop = document.getElementById("banner").offsetHeight; // Top of NavBar = bottom of banner
+		 
+				$(window).scroll(function(){ // When the window scrolls
+					stickyHeaderTop = document.getElementById("banner").offsetHeight; // Get the bottom of the banner again
+					var h = document.getElementById("ul").offsetHeight + "px";
+					
+					if( $(window).scrollTop() > stickyHeaderTop ) {
+						$('#ul').css({position:'fixed', top:'0px', width:"99%"});
+						$('#stickyalias').css({display:'block', height:h});
+					} else {
+						$('#ul').css({position:'static', top:'0px', width:"100%", height:'auto'});
+						$('#stickyalias').css({display:'none'});
+					}
+				});
+			});
+		</script>
+		<!-- End of sticky header code -->
+		
+	</head>
+
+	<body id="body">
+		<!-- Facebook Like button code -->
+		<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script>
+
+		<table id="banner">
+			<tr>
+				<td class="banner">
+					<a href="https://www.youtube.com/DGCubes/" target="_blank"> <img src="../SharedPictures/Banner.png" class="banner" alt="Banner"> </a>
+				</td>
+			</tr>
+		</table>
+
+		<ul id="ul">
+			<li class="nav"><a href="../"><span style="color:white;">Homepage</span></a></li>
+			<li class="nav"><a href="#"><span style="font-weight:bold;color:black;">PBs, Mains, Methods</span></a></li>
+			<li class="nav"><a href="../extras"><span style="color:white;">Extras</span></a></li>
+			<li class="nav"><a href="../l4e"><span style="color:white;">L4E Trainer</span></a></li>
+			<li class="nav"><a href="https://www.youtube.com/DGCubes/" target="_blank"><span style="color:white;">YouTube Channel</span></a></li>
+			<li class="nav"><a href="../about"><span style="color:white;">About</span></a></li>
+		</ul>
+		
+		<div id="stickyalias"></div>
+
+		<table class="d3">
+			<tr>
+				<td>
+					<h1 class="regularText">
+						These are my PBs (personal bests), global averages, main speedcubes, and methods for all the events I do. This page updates automatically whenever I break a PB, so it is always up-to-date.
+						If any of the areas say "N/A," it's because I do not know my average or have a specific main for that event. If any of the information doesn't load for you, you can try refreshing the page, or you can view my personal bests <a href="https://docs.google.com/spreadsheets/d/1Bvyksa6J_25ciXkU69vmrVcp38jZO-ENuIqZANwJwIs/edit?usp=sharing" target="_blank">here</a> instead.
+					</h1>
+
+					<table id="pbTable">
+						<tr>
+							<th class="tableTop">Event</th>
+							<th class="tableTop">Time</th>
+							<th class="tableTop">Date</th>
+							<th class="tableTop">Global Average</th>
+							<th class="tableTopWide">Main</th>
+							<th class="tableTopWide">Method</th>
+						</tr>
+						
+						<!-- div id naming scheme:
+								event + extension
+								where event = an event abbreviation as in the JavaScript array above
+								and extension = p, d, a, c, or m, for PB, date, average, cube, and method, respectively-->
+						
+						<tr>
+							<td class="pb">2x2x2</td>
+							<td class="pb"><div id="2x2p">Loading...</div></td>
+							<td class="pb"><div id="2x2d">Loading...</div></td>
+							<td class="pb"><div id="2x2a">Loading...</div></td>
+							<td class="pb"><div id="2x2c">Loading...</div></td>
+							<td class="pb"><div id="2x2m">Loading...</div></td>
+						</tr>
+						<tr>
+							<td class="pb">3x3x3</td>
+							<td class="pb"><div id="3x3p">Loading...</div></td>
+							<td class="pb"><div id="3x3d">Loading...</div></td>
+							<td class="pb"><div id="3x3a">Loading...</div></td>
+							<td class="pb"><div id="3x3c">Loading...</div></td>
+							<td class="pb"><div id="3x3m">Loading...</div></td>
+						</tr>
+						<tr>
+							<td class="pb">4x4x4</td>
+							<td class="pb"><div id="4x4p">Loading...</div></td>
+							<td class="pb"><div id="4x4d">Loading...</div></td>
+							<td class="pb"><div id="4x4a">Loading...</div></td>
+							<td class="pb"><div id="4x4c">Loading...</div></td>
+							<td class="pb"><div id="4x4m">Loading...</div></td>
+						</tr>
+						<tr>
+							<td class="pb">5x5x5</td>
+							<td class="pb"><div id="5x5p">Loading...</div></td>
+							<td class="pb"><div id="5x5d">Loading...</div></td>
+							<td class="pb"><div id="5x5a">Loading...</div></td>
+							<td class="pb"><div id="5x5c">Loading...</div></td>
+							<td class="pb"><div id="5x5m">Loading...</div></td>
+						</tr>
+						<tr>
+							<td class="pb">6x6x6</td>
+							<td class="pb"><div id="6x6p">Loading...</div></td>
+							<td class="pb"><div id="6x6d">Loading...</div></td>
+							<td class="pb"><div id="6x6a">Loading...</div></td>
+							<td class="pb"><div id="6x6c">Loading...</div></td>
+							<td class="pb"><div id="6x6m">Loading...</div></td>
+						</tr>
+						<tr>
+							<td class="pb">7x7x7</td>
+							<td class="pb"><div id="7x7p">Loading...</div></td>
+							<td class="pb"><div id="7x7d">Loading...</div></td>
+							<td class="pb"><div id="7x7a">Loading...</div></td>
+							<td class="pb"><div id="7x7c">Loading...</div></td>
+							<td class="pb"><div id="7x7m">Loading...</div></td>
+						</tr>
+						<tr>
+							<td class="pb">Pyraminx</td>
+							<td class="pb"><div id="pyrap">Loading...</div></td>
+							<td class="pb"><div id="pyrad">Loading...</div></td>
+							<td class="pb"><div id="pyraa">Loading...</div></td>
+							<td class="pb"><div id="pyrac">Loading...</div></td>
+							<td class="pb"><div id="pyram">Loading...</div></td>
+						</tr>
+						<tr>
+							<td class="pb">Megaminx</td>
+							<td class="pb"><div id="megap">Loading...</div></td>
+							<td class="pb"><div id="megad">Loading...</div></td>
+							<td class="pb"><div id="megaa">Loading...</div></td>
+							<td class="pb"><div id="megac">Loading...</div></td>
+							<td class="pb"><div id="megam">Loading...</div></td>
+						</tr>
+						<tr>
+							<td class="pb">Square-1</td>
+							<td class="pb"><div id="sq1p">Loading...</div></td>
+							<td class="pb"><div id="sq1d">Loading...</div></td>
+							<td class="pb"><div id="sq1a">Loading...</div></td>
+							<td class="pb"><div id="sq1c">Loading...</div></td>
+							<td class="pb"><div id="sq1m">Loading...</div></td>
+						</tr>
+						<tr>
+							<td class="pb">Skewb</td>
+							<td class="pb"><div id="skp">Loading...</div></td>
+							<td class="pb"><div id="skd">Loading...</div></td>
+							<td class="pb"><div id="ska">Loading...</div></td>
+							<td class="pb"><div id="skc">Loading...</div></td>
+							<td class="pb"><div id="skm">Loading...</div></td>
+						</tr>
+						<tr>
+							<td class="pb">3x3x3 OH</td>
+							<td class="pb"><div id="ohp">Loading...</div></td>
+							<td class="pb"><div id="ohd">Loading...</div></td>
+							<td class="pb"><div id="oha">Loading...</div></td>
+							<td class="pb"><div id="ohc">Loading...</div></td>
+							<td class="pb"><div id="ohm">Loading...</div></td>
+						</tr>
+						<tr>
+							<td class="pb">3x3x3 BLD</td>
+							<td class="pb"><div id="bldp">Loading...</div></td>
+							<td class="pb"><div id="bldd">Loading...</div></td>
+							<td class="pb"><div id="blda">Loading...</div></td>
+							<td class="pb"><div id="bldc">Loading...</div></td>
+							<td class="pb"><div id="bldm">Loading...</div></td>
+						</tr>
+						<tr>
+							<td class="pb">4x4x4 BLD</td>
+							<td class="pb"><div id="4bldp">Loading...</div></td>
+							<td class="pb"><div id="4bldd">Loading...</div></td>
+							<td class="pb"><div id="4blda">Loading...</div></td>
+							<td class="pb"><div id="4bldc">Loading...</div></td>
+							<td class="pb"><div id="4bldm">Loading...</div></td>
+						</tr>
+						<tr>
+							<td class="pb">5x5x5 BLD</td>
+							<td class="pb"><div id="5bldp">Loading...</div></td>
+							<td class="pb"><div id="5bldd">Loading...</div></td>
+							<td class="pb"><div id="5blda">Loading...</div></td>
+							<td class="pb"><div id="5bldc">Loading...</div></td>
+							<td class="pb"><div id="5bldm">Loading...</div></td>
+						</tr>
+						<tr>
+							<td class="pb">3x3x3 MBLD</td>
+							<td class="pb"><div id="mbldp">Loading...</div></td>
+							<td class="pb"><div id="mbldd">Loading...</div></td>
+							<td class="pb"><div id="mblda">Loading...</div></td>
+							<td class="pb"><div id="mbldc">Loading...</div></td>
+							<td class="pb"><div id="mbldm">Loading...</div></td>
+						</tr>
+						<tr>
+							<td class="pb">3x3x3 with Feet</td>
+							<td class="pb"><div id="wfp">Loading...</div></td>
+							<td class="pb"><div id="wfd">Loading...</div></td>
+							<td class="pb"><div id="wfa">Loading...</div></td>
+							<td class="pb"><div id="wfc">Loading...</div></td>
+							<td class="pb"><div id="wfm">Loading...</div></td>
+						</tr>
+						<tr>
+							<td class="pb">3x3x3 FMC</td>
+							<td class="pb"><div id="fmcp">Loading...</div></td>
+							<td class="pb"><div id="fmcd">Loading...</div></td>
+							<td class="pb"><div id="fmca">Loading...</div></td>
+							<td class="pb"><div id="fmcc">Loading...</div></td>
+							<td class="pb"><div id="fmcm">Loading...</div></td>
+						</tr>
+						<tr>
+							<td class="pb">Clock</td>
+							<td class="pb"><div id="clp">Loading...</div></td>
+							<td class="pb"><div id="cld">Loading...</div></td>
+							<td class="pb"><div id="cla">Loading...</div></td>
+							<td class="pb"><div id="clc">Loading...</div></td>
+							<td class="pb"><div id="clm">Loading...</div></td>
+						</tr>
+					</table>
+					<br/>
+				</td>
+			</tr>
+		</table>
+		
+		<div style="width:100%;text-align:center;"><div class="fb-like" data-href="https://www.facebook.com/DGCubes/" data-layout="button_count" data-action="like" data-size="large" data-show-faces="true" data-share="true"></div>&nbsp;&nbsp;Like <a href="https://www.facebook.com/DGCubes/" target="_blank">DGCubes</a> on Facebook!</div>
+		<br/><br/>
+
+		<table id="footer">
+			<tr>
+				<td>
+					Last updated by Daniel Goodman on 
+					<script type="text/javascript">
+						var monthList = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+						var currentTime = new Date();
+						var monthString = monthList[currentTime.getMonth()];
+						var day = currentTime.getDate();
+						var year = currentTime.getFullYear();
+						document.write(monthString + " " + day + ", " + year + ".");
+					</script>
+				</td>
+			</tr>
+		</table>
+		
+	</body>
+</html>		

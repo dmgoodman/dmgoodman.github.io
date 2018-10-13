@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Cubing Feud</title>
+		
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<script type="text/javascript">
+			google.load("visualization", "1", {packages:["corechart"]});
+			google.setOnLoadCallback(drawSheetName);
+
+			function drawSheetName() {
+				//Selects the columns to be extracted
+				var queryString = encodeURIComponent('SELECT D, E, F');
+
+				//Change headers=1 to headers=0 to include the first row
+				var query = new google.visualization.Query('https://docs.google.com/spreadsheets/d/1-uE_NT6byS-yLtnMIpYhE7b6aurHlRX9Q4oUPXVS7Vw/gviz/tq?gid=0&headers=1&tq=' + queryString); 
+				query.send(handleSampleDataQueryResponse);
+			}
+
+			function handleSampleDataQueryResponse(response) {
+				var data = response.getDataTable();
+				
+				for (var i = 0; i < data.getValue(2, 2); i++) {
+					console.log("hi");
+				}
+				
+				console.log(data.getValue(0,0));
+				
+				//for (var i = 0; i < 8; i++) {
+					//var pb = data.getValue(i, 0); //0 is relative to the columns selected, not the columns in the sheet; in this case, 0 points to column D
+				//}
+			}
+				
+		</script>
+	</head>
+	<body>
+	
+	</body>
+</html>

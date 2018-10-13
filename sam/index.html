@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Samchillian Tip Tip Tip Cheeepeeeee</title>
+		<meta charset="UTF-8">
+		<meta name="description" content="This is a virtual Samchillian Tip Tip Tip Cheeepeeeee, an instrument where each key corresponds to an interval instead of a note.">
+		<meta name="keywords" content="Samchillian Tip Tip Tip Cheeepeeee, Samchillian, Instrument, Tip Tip Tip, Cheeepeeeee">
+		<meta name="author" content="Goodie and Luke">
+
+		<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+		<script>
+			var current = 7;
+			var notes = ["C-","D-","E-","F-","G-","A-","B-","C","D","E","F","G","A","B","C+","D+","E+","F+","G+","A+","B+","C++"];
+			function changeNote(amount) {
+				if (current+amount<notes.length && current+amount>-1){
+					current=current+amount;
+				}
+				else if(current+amount>=notes.length){
+					current=notes.length-1;
+				}
+				else{
+					current=0;
+				}
+				var audio=new Audio(notes[current]+".mp3");
+				document.getElementById("currentNote").innerHTML = notes[current];
+				audio.play();
+			}
+			document.addEventListener("keydown",function(event){
+				switch(event.which){
+					case 81:	changeNote(-7);
+								break;
+					case 65:	changeNote(-4);
+								break;
+					case 83:	changeNote(-3);
+								break;
+					case 68:	changeNote(-2);
+								break;
+					case 70:	changeNote(-1);
+								break;
+					case 32:	changeNote(0);
+								break;
+					case 74:	changeNote(1);
+								break;
+					case 75:	changeNote(2);
+								break;
+					case 76:	changeNote(3);
+								break;
+					case 186:	changeNote(4);
+								break;					
+					case 80:	changeNote(7);
+								break;
+				}
+			});
+			
+			function showStrokes() {
+				if (document.getElementById("footer").innerHTML == "Show Keystrokes") {
+					document.getElementById("strokes").innerHTML = 
+					"&nbsp;Q&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;&nbsp;&nbsp;S&nbsp;&nbsp;&nbsp;&nbsp;D&nbsp;&nbsp;&nbsp;&nbsp;F&nbsp;&nbsp;&nbsp;space&nbsp;&nbsp;&nbsp;J&nbsp;&nbsp;&nbsp;K&nbsp;&nbsp;&nbsp;L&nbsp;&nbsp;&nbsp;;&nbsp;&nbsp;&nbsp;P<br/>" +
+					"-7&nbsp;&nbsp;&nbsp;-4&nbsp;&nbsp;&nbsp;-3&nbsp;&nbsp;&nbsp;-2&nbsp;&nbsp;&nbsp;-1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp;&nbsp;3&nbsp;&nbsp;&nbsp;4&nbsp;&nbsp;&nbsp;7";
+					document.getElementById("footer").innerHTML = "Hide Keystrokes";
+				} else {
+					document.getElementById("strokes").innerHTML = "";
+					document.getElementById("footer").innerHTML = "Show Keystrokes";
+				}
+				
+			}
+		</script>
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+			ga('create', 'UA-96185710-1', 'auto');
+			ga('send', 'pageview');
+		</script>
+		<style>
+			div, button{
+				text-align:center;
+				background-color:rgb(0,0,255);
+				width:150px;
+				height:150px;
+				border-radius:20%;
+				color:white;
+				font-size:20px;
+				font-family:Monospace;
+				/*display:inline;*/
+				padding:0px;
+			}
+			#footer{
+				width:300px;
+				height:75px;
+			}
+			.info{
+				background-color:rgb(100,100,255);
+			}
+			body{
+				text-align:center;
+				background-color:rgba(100,255,100,0.5);
+				color:rgb(0,100,0);
+				font-family:Arial;
+			}
+			p {
+				font-family:monospace;
+				font-size:20px;
+			}
+
+			@media print {
+				@page {
+					margin: 0.5cm;
+				}
+			}
+
+			@media only screen and (max-device-width:480px) {
+				#footer {
+					display:none
+				
+}
+				button {
+					width:250px;
+					height:250px;
+					font-size:80px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Samchillian Tip Tip Tip Cheeepeeeee???</h1>
+		<button id="plusOne" onClick="changeNote(1)">+1</button>
+		<button onClick="changeNote(2)">+2</button>
+		<button onClick="changeNote(3)">+3</button><br/>
+		<button class="info" id="currentNote">C</button>
+		<button onClick="changeNote(0)">0</button>
+		<button class="info" style="font-size:10px;">By Goodie and Luke</button><br/>
+		<button onClick="changeNote(-1)">-1</button>
+		<button onClick="changeNote(-2)">-2</button>
+		<button onClick="changeNote(-3)">-3</button>
+		<br/><br/><br/>
+		<p>This is a virtual Samchillian Tip Tip Tip Cheeepeeeee, an instrument where each key corresponds to an interval instead of a note. Enjoy!</p>
+		<button id="footer" onClick="showStrokes()">Show Keystrokes</button>
+		<p id="strokes"></p>
+	</body>
+</html>

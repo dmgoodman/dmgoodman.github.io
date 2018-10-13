@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Intuitive L4E Trainer</title>
+
+		<meta charset="UTF-8">
+		<meta name="description" content="DGCubes is a YouTube channel dedicated to speedsolving the Rubik's Cube, which features entertainment videos, reviews, unboxings, and a bunch of other types of videos! On this website, you can check out my PBs, mains, averages, and more.">
+		<meta name="keywords" content="Cubing,Rubik's Cube,Speedcubing,Speedsolving,Rubik's,Rubix,DGCubes,Cube,Daniel Goodman,Cuber,Speedcuber,YouTube">
+		<meta name="author" content="Daniel Goodman">
+
+		<link rel="stylesheet" type="text/css" href="../DGCubes.css" />
+		<link rel="shortcut icon" href="../SharedPictures/DGCubes.ico">
+		
+		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		<script>
+		  (adsbygoogle = window.adsbygoogle || []).push({
+			google_ad_client: "ca-pub-7286368824593546",
+			enable_page_level_ads: true
+		  });
+		</script>
+
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+			ga('create', 'UA-96185710-1', 'auto');
+			ga('send', 'pageview');
+		</script>
+		
+		<script>
+			var timerOn = false;
+			var start = true;
+			var startTime = 0;
+			var cases = 	["R U R' U R U R'","R U R' U' R U' R'","L U' R U' R' U L'","L R U R' U' L'","L U R U' R' L'",
+							"L R L' U L' U' L R'","R B U B' U R' L' U' L","L B L B U' B L","L' B' U B' L' B' L'",
+							"L' U L R U R'","R U' R' L' U' L","L' B' U' B L","R' L' B L' B' R L'","L' U L' R' L' R",
+							"L R L U L' R' L'","L' U L","L' U' L U' R U' R'","R' L R L'","L' U B' U B L","L' U' L",
+							"L B L B' L","L' U L U' R U R'","L' B' U' B U' L","R U R' L' U' L","R' B' R' B U' R'",
+							"R U R' U' R U' R'","L R L U' L' R' L'","R U R'","R U' R' U L' U' L","L' B L' B' L'",
+							"R B U B' U R'","R U' R'","R B U B R B R","R U' B U' B' R'","L R' L' R","R U R' U L' U L",
+							"R U' B U' B' R'","L R' B L B' L R","R' L' R' U' R L R","R U' R' U L' U' L","R' B' R' B R'",
+							"R B U B' U R'","R B' R B R","L' U L U' R U R'","L' B' U' B U' L","L' U' L R U R'",
+							"L' U' L U L' U L","R' L' R' U R L R","L' B' U' B' L' B' L'","L' U B' U B L","L' B L' B' L'",
+							"R' L' B' L' R' B R' L'","R B U B' U R'","L B L B U B L","R U' B U' B' R'","L R L U' L' R' L'",
+							"L' B' U B L","R U' R' U R U R'","R' B' R' B' U' B' R'","L' U B' U B L","L R B R L B' L R",
+							"R B' R B R","L' B' U' B U' L","R B U' B' R'","R' L' R' U R L R","L' U L U' L' U' L"];
+			var auf1 = ["U ","U' ",""]
+			var auf2 = [" U"," U'",""]
+			var tips = [" u"," u'",""]
+			
+			var times = [];
+			var scrambles = [];
+			
+			function randomL4E() {
+				var returnValue = auf1[Math.floor(Math.random() * auf1.length)] + cases[Math.floor(Math.random() * cases.length)] + auf2[Math.floor(Math.random() * auf2.length)] + tips[Math.floor(Math.random() * tips.length)];
+				document.getElementById("setUp").innerHTML = "Scramble: " + returnValue;
+				scrambles.push(returnValue);
+			}
+		
+			document.addEventListener("keydown",function(event){
+				if (timerOn && event.which == 32) {
+					stopTimer();
+					document.getElementById("plusTwo").innerHTML = "+2";
+					document.getElementById("DNF").innerHTML = "DNF";
+					plusTwoed = false;
+					DNFed = false;
+				} else if (!timerOn && event.which == 32) {
+					document.getElementById("timer").style.color = "green";
+				}
+			});
+			
+			document.addEventListener("keyup",function(event){
+				if (!timerOn && start && event.which == 32) {
+					document.getElementById("timer").style.color = "black";
+					startTimer();
+				} else if (!timerOn && !start && event.which == 32) {
+					start = true;
+				}
+			});
+			
+			function startTimer() {
+				d1 = new Date();
+				startTime = d1.getTime();
+				document.getElementById("timer").innerHTML = "running";
+				
+				timerOn = true;
+			}
+			
+			function stopTimer() {
+				d1 = new Date();
+				document.getElementById("timer").innerHTML = (d1.getTime() - startTime) / 1000;
+				
+				times.push((d1.getTime() - startTime) / 1000);
+				printTimes(false);
+				
+				timerOn = false;
+				start = false;
+				randomL4E();
+			}
+			
+			function printTimes(deleted) {
+				var current = document.getElementById("times").innerHTML;
+				if (!deleted) {
+					document.getElementById("times").innerHTML = current + "<span id=\"a" + (times.length - 1) + "\" onclick=\"deleteTime(this)\"><br/>" + times[times.length - 1] + " - " + scrambles[scrambles.length - 1] + "</span>";
+				} else {
+					document.getElementById("times").innerHTML = "";
+					for (var i = 0; i < times.length; i++) {
+						current = document.getElementById("times").innerHTML;
+						document.getElementById("times").innerHTML = current + "<span id=\"a" + (i) + "\" onclick=\"deleteTime(this)\"><br/>" + times[i] + " - " + scrambles[i] + "</span>";
+					}
+				}
+				
+				document.getElementById("info").innerHTML = "<a onclick=\"deleteAll()\" style=\"text-decoration:underline;\">x</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Times: " + (times.length - countDNFs()) + "/" + times.length + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mean: " + getMean();
+				document.getElementById("avg").innerHTML = "Current average of 5: " + getAverage(5) + "<br/>Current average of 12: " + getAverage(12);
+			}
+			
+			function deleteAll() {
+				var response = confirm("This will delete all your times. Are you sure you want to proceed?");
+				if (response) {
+					document.getElementById("times").innerHTML = "";
+					times = [];
+					document.getElementById("info").innerHTML = "<a onclick=\"deleteAll()\" style=\"text-decoration:underline;\">x</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Times: " + (times.length - countDNFs()) + "/" + times.length + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mean: N/A";
+				}			
+			}
+			
+			
+			function deleteTime(htmlElement) {
+				if (confirm("This will delete the time you clicked on. Are you sure you want to proceed?")) {
+					htmlElement.parentNode.removeChild(htmlElement);
+					times.splice(Number(htmlElement.id.substr(1,2)),1);
+					scrambles.splice(Number(htmlElement.id.substr(1,2)),1);
+					printTimes(true);
+				}
+			}
+			
+			function getMean() {
+				var sum = 0;
+				var amount = 0;
+				for (i = 0; i < times.length; i++) {
+					if (times[i] < 999999999998) {
+						sum = sum + times[i];
+						amount = amount + 1;
+					}
+				}
+				
+				if (amount > 0) {
+					return Math.round((sum / amount) * 1000) / 1000;
+				}
+				
+				return "N/A";
+			}
+			
+			function getAverage(amount) {
+				if (times.length >= amount) {
+					var max = 0;
+					var min = times[times.length - 1];
+					var sum = 0;
+					
+					for (i = 0; i < amount; i++) {
+						if (times[times.length - 1 - i] > max) {
+							max = times[times.length - 1 - i];
+						} else if (times[times.length - 1 - i] < min) {
+							min = times[times.length - 1 - i];
+						}
+						
+						sum = sum + times[times.length - 1 - i];
+					}
+					
+					sum = sum - min - max;
+					
+					var avg = Math.round((sum / (amount - 2)) * 1000) / 1000;
+					
+					if (avg < 99999999999) {
+						return avg;
+					}
+					
+					return "DNF";
+				}
+				
+				return "N/A";
+			}
+			
+			var plusTwoed = false;
+			
+			function plusTwo() {
+				if (!plusTwoed && !DNFed) {
+					var last = times.length - 1;
+					times[last] = times[last] + 2.000;
+					document.getElementById("a" + last).innerHTML = (Math.round(times[last] * 1000) / 1000) + "+ - " + scrambles[scrambles.length - 2];
+					document.getElementById("plusTwo").innerHTML = "OK";
+					plusTwoed = true;
+				} else if (plusTwoed && !DNFed) {
+					var last = times.length - 1;
+					times[last] = times[last] - 2.000;
+					document.getElementById("a" + last).innerHTML = (Math.round(times[last] * 1000) / 1000) + " - " + scrambles[scrambles.length - 2];
+					document.getElementById("plusTwo").innerHTML = "+2";
+					plusTwoed = false;
+				}
+				
+				document.getElementById("info").innerHTML = "<a onclick=\"deleteAll()\" style=\"text-decoration:underline;\">x</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Times: " + (times.length - countDNFs()) + "/" + times.length + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mean: " + getMean();
+			}
+			
+			var DNFed = false;
+			
+			function DNF() {
+				if (!DNFed && !plusTwoed) {
+					var last = times.length - 1;
+					times[last] = times[last] + 999999999999.000;
+					document.getElementById("a" + last).innerHTML = "DNF - " + scrambles[scrambles.length - 2];
+					document.getElementById("DNF").innerHTML = "OK";
+					DNFed = true;
+				} else if (DNFed && !plusTwoed) {
+					var last = times.length - 1;
+					times[last] = times[last] - 999999999999.000;
+					document.getElementById("a" + last).innerHTML = (Math.round(times[last] * 1000) / 1000) + " - " + scrambles[scrambles.length - 2];
+					document.getElementById("DNF").innerHTML = "DNF";
+					DNFed = false;
+				}
+				
+				document.getElementById("info").innerHTML = "<a onclick=\"deleteAll()\" style=\"text-decoration:underline;\">x</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Times: " + (times.length - countDNFs()) + "/" + times.length + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mean: " + getMean();
+				document.getElementById("avg").innerHTML = "Current average of 5: " + getAverage(5) + "<br/>Current average of 12: " + getAverage(12);
+			}
+			
+			function countDNFs() {
+				var count = 0;
+			
+				for (i = 0; i < times.length; i++) {
+					if (times[i] >= 999999999999.000) {
+						count = count + 1;
+					}
+				}
+				
+				return count;
+			}
+			
+		</script>
+		
+		<!-- Sticky header code adapted from: https://stackoverflow.com/questions/14496240/how-can-i-stick-the-div-after-scrolling-down-a-little -->
+		<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+		
+		<script>
+			$(function(){
+				var stickyHeaderTop = document.getElementById("banner").offsetHeight; // Top of NavBar = bottom of banner
+		 
+				$(window).scroll(function(){ // When the window scrolls
+					stickyHeaderTop = document.getElementById("banner").offsetHeight; // Get the bottom of the banner again
+					var h = document.getElementById("ul").offsetHeight + "px";
+					
+					if( $(window).scrollTop() > stickyHeaderTop ) {
+						$('#ul').css({position:'fixed', top:'0px', width:"99%"});
+						$('#stickyalias').css({display:'block', height:h});
+					} else {
+						$('#ul').css({position:'static', top:'0px', width:"100%", height:'auto'});
+						$('#stickyalias').css({display:'none'});
+					}
+				});
+			});
+		</script>
+		<!-- End of sticky header code -->
+		
+	</head>
+	
+	<body id="body" onload="randomL4E()">
+		<!-- Facebook Like button code -->
+		<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script>
+		
+		<table id="banner">
+			<tr>
+				<td class="banner">
+					<a href="https://www.youtube.com/DGCubes/" target="_blank"> <img src="../SharedPictures/Banner.png" class="banner" alt="Banner"> </a>
+				</td>
+			</tr>
+		</table>
+
+		<ul id="ul">
+			<li class="nav"><a href="../"><span style="color:white;">Homepage</span></a></li>
+			<li class="nav"><a href="../pb"><span style="color:white;">PBs, Mains, Methods</span></a></li>
+			<li class="nav"><a href="../extras"><span style="color:white;">Extras</span></a></li>
+			<li class="nav"><a href="#"><span style="font-weight:bold;color:black;">L4E Trainer</span></a></li>
+			<li class="nav"><a href="https://www.youtube.com/DGCubes/" target="_blank"><span style="color:white;">YouTube Channel</span></a></li>
+			<li class="nav"><a href="../about"><span style="color:white;">About</span></a></li>
+		</ul>
+		
+		<div id="stickyalias"></div>
+
+		<table class="d3">
+			<tr class="d3">
+				<td class="d3">
+					<br/>
+					<h1 class="regularText">This is an intuitive L4E trainer! Intuitive L4E is an advanced Pyraminx method in which a V (a layer minus one edge piece) is solved on any color,
+					and then the rest of the Pyraminx is solved in one intuitive algorithm. It is generally seen as a step up from the layer-by-layer method. This trainer will give you an algorithm
+					to set up a random L4E case, and a timer is included to keep track of your times for each and to find out which ones you need to improve on.</h1>
+					<br/>
+					
+					<table style="width:100%;text-align:center;">
+						<tr style="width:100%;">
+							<td style="width:70%;border:2px solid black;">
+								<p id="setUp"></p>
+								<p id="timer" style="font-size:80px;">0.000</p>
+								<p><a id="plusTwo" onclick="plusTwo()">+2</a>&nbsp;&nbsp;<a id="DNF" onclick="DNF()">DNF</a></p>
+							</td>
+							<td style="width:30%;border:2px solid black;">
+								<p id="info"><a onclick="deleteAll()" style="text-decoration:underline;">x</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Times: 0/0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mean: N/A</p>
+								<p id="avg">Current average of 5: N/A<br/>Current average of 12: N/A</p>
+								<p id="times" style="text-align:center;vertical-align:top;height:350px;overflow-y:auto;"></p>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<br/>
+					How to use:
+					<br/>Press the spacebar or tap the screen to start or stop the timer. Your times will automatically be recorded and averaged on the right. If any times are a +2 second penalty or DNF, click on the
+					appropriate choice beneath the timer to apply the penalty. To delete all of your times, click on the X on the right of the screen. To delete a single time, click on it once.
+					<br/><br/>
+				</td>
+			</tr>
+		</table>
+		
+		<div style="width:100%;text-align:center;"><div class="fb-like" data-href="https://www.facebook.com/DGCubes/" data-layout="button_count" data-action="like" data-size="large" data-show-faces="true" data-share="true"></div>&nbsp;&nbsp;Like <a href="https://www.facebook.com/DGCubes/" target="_blank">DGCubes</a> on Facebook!</div>
+		<br/><br/>
+
+		<table id="footer">
+			<tr>
+				<td>
+					Last updated by Daniel Goodman on August 12, 2017.
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

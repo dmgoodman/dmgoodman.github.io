@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>FMC trainer</title>
+		
+		<meta charset="UTF-8">
+		<meta name="description" content="A site to practice and improve your FMC (fewest moves challenge) skills!">
+		<meta name="keywords" content="Cubing,Rubik's Cube,FMC,Fewest Moves,Fewest Moves Challenge,Puzzle,3x3x3,3x3">
+		<meta name="author" content="Daniel Goodman">
+		
+		<link rel="stylesheet" type="text/css" href="fmc.css"/>
+		<script type="text/javascript" src="cube_sim.js"></script>
+		
+		<!--CODE ADAPTED FROM https://productforums.google.com/forum/#!topic/docs/RMKFBdfd3t4-->
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<script type="text/javascript">
+			
+			
+			google.load("visualization", "1", {packages:["corechart"]});
+			google.setOnLoadCallback(drawSheetName);
+
+			var solves = []; // Array of [ID, type, scramble, skeleton, optimal moves, optimal solution] arrays
+			var info = []; // Array of IDs
+			var startTime;
+			var score = 0;
+			var amount = 25;
+			
+			function drawSheetName() {
+				about(); // Put here so it happens after the page loads
+				var queryString = encodeURIComponent('SELECT A, B, D, E, G, H, K');
+				var query = new google.visualization.Query('https://docs.google.com/spreadsheets/d/1KJoNjRy_NnJwhY-tcsInlrR7-MvrgcVX2hJyLaQOlp8/gviz/tq?gid=0&headers=1&tq=' + queryString); 
+				query.send(handleSampleDataQueryResponse);
+			}
+
+			function handleSampleDataQueryResponse(response) {
+				var data = response.getDataTable();
+				amount = data.getValue(0,6);
+				
+				var single = [];
+				for (var i = 0; i < amount; i++) {
+					for (var j = 0; j < 6; j++) {
+						single.push(data.getValue(i,j));
+					}
+					
+					solves.push(single);
+					single = [];
+				}
+			}
+
+			function play() {
+				document.getElementById("changing").innerHTML = '<h2 id="instructions">Enter your current data:</h2> \
+						<input type="text" id="data"></input> \
+						<br/><br/> \
+						<button onclick="submitData(\'no\')">Submit</button>';
+				document.getElementById("extra").innerHTML = ''; // Clear any errors
+			}
+
+			/* Called when the first button is pressed
+			*  Saves the user's data in info
+			*  Changes the page to ask the user for a type of insertion
+			*/
+			function submitData(isNew) {
+				if (isNew === "no") {
+					data = document.getElementById("data").value;
+				} else {
+					data = isNew;
+				}
+				
+				try {
+					if (data.length > 0) {
+						data = data.split(":");
+						info = data[1].split(",");
+						score = Number(data[0]);
+					}
+					
+					// Check which types are unavailable
+					var types = ["3C","4C","5C","6C","7C","3E","4E","5E","3E3C","3E4C","3E5C"];
+					
+					for (var j = 0; j < types.length; j++) {
+						var found = false;
+						
+						for (var i = 0; i < solves.length; i++) {
+							if (solves[i][1] === types[j] && !info.includes(solves[i][0].toString()) && !found) {
+								found = true;
+							}
+						}
+						
+						if (!found) {
+							types[j] = "disabled";
+						} else {
+							types[j] = "";
+						}
+					}
+					
+					// Show all types (greyed out if unavailable)					
+					document.getElementById("changing").innerHTML = '<h2 id="instructions">Select an insertion type:</h2> \
+						<select id="type"> \
+							<option value="3C"' + types[0] + '>3 corners</option> \
+							<option value="4C"' + types[1] + '>4 corners</option> \
+							<option value="5C"' + types[2] + '>5 corners</option> \
+							<option value="6C"' + types[3] + '>6 corners</option> \
+							<option value="7C"' + types[4] + '>7 corners</option> \
+							<option value="3E"' + types[5] + '>3 edges</option> \
+							<option value="4E"' + types[6] + '>4 edges</option> \
+							<option value="5E"' + types[7] + '>5 edges</option> \
+							<option value="3E3C"' + types[8] + '>3 edges, 3 corners</option> \
+							<option value="3E4C"' + types[9] + '>3 edges, 4 corners</option> \
+							<option value="3E5C"' + types[10] + '>3 edges, 5 corners</option> \
+						</select> \
+						&nbsp;&nbsp;&nbsp;&nbsp; \
+						<button onclick="submitType()">Submit</button>';
+					
+					document.getElementById("specialNavItem").innerHTML = "EXP: " + score;
+					document.getElementById("extra").innerHTML = ''; // Clear any errors
+				} catch(error) {
+					document.getElementById("extra").innerHTML = '<h2 style="color:red">ERROR: Invalid data. Leave field blank if you are a new user.</h2>';
+				}
+			}
+
+			/* Called when the second button is pressed
+			*  Chooses an appropriate scramble and skeleton for the requested type (avoids repeats based on data)
+			*  Changes the page to show this scramble and skeleton, and executes the scramble on the virtual cube
+			*/
+			function submitType() {
+				document.getElementById("extra").innerHTML = ''; // Clear any errors
+			
+				var type = document.getElementById("type").value;
+				var id;
+				
+				for (var i = 0; i < solves.length; i++) {
+					if (solves[i][1] === type && !info.includes(solves[i][0].toString())) {
+						id = i;
+					}
+				}
+				
+				try {
+					document.getElementById("changing").innerHTML = '<h2 id="scramble">Scramble: ' + solves[id][2] + '</h2> \
+						<h2 id="skeleton">Skeleton: ' + solves[id][3] + '</h2> \
+						<input type="text" id="alg"></input> \
+						<br/><br/> \
+						<button id="submitSol" onclick="submitSolution(' + id + ')">Submit</button>';
+					
+					new_solved_cube();
+					execute(solves[id][2]);
+					startTime = new Date().getTime();
+				} catch(error) {
+					document.getElementById("extra").innerHTML = '<h2 style="color:red">ERROR: None of these insertions have been added yet, or you have done them all. Please try again later.</h2>';
+				}
+			}
+			
+			var newData;
+
+			/* Called when the third button is pressed
+			*  Tests the submitted solution and tells the user the results
+			*  Gives the user their new data text file
+			*/
+			function submitSolution(id) {
+				var moves = document.getElementById("alg").value.trim();
+				execute(moves);
+				var numMoves = len(moves);
+				
+				if (is_solved(edges, corners)) {
+					var time = (new Date().getTime() - startTime) / 1000.0;
+					var newPoints = Math.round(points(solves[id][4], solves[id][1], numMoves, time));
+					score += newPoints;
+					score = Math.round(score);
+					
+					newData = score.toString() + ":";
+					for (var i = 0; i < info.length; i++) {
+						newData = newData + info[i] + ",";
+					}
+					
+					newData = newData + (id + 1).toString();
+					
+					document.getElementById("extra").innerHTML = '<h2 style="color:green">Solved in ' + numMoves + ' moves, in ' + time + ' seconds.</h2> \
+						<h2 style="color:green">Optimal solution is ' + solves[id][4].toString() + ' moves: ' + solves[id][5] + '</h2> \
+						<h2 style="color:green">' + newPoints.toString() + ' points added!</h2> \
+						<br/><input type="text" id="data" value="' + newData + '"></input> \
+						&nbsp;<button onclick="copy()" class="bigButton">Copy Data to Clipboard</button> \
+						<br/><br/><button onclick="restart()">Continue</button>';
+						
+					document.getElementById("specialNavItem").innerHTML = "EXP: " + score;
+					document.getElementById("submitSol").style.visibility = 'hidden';
+					
+				} else {
+					document.getElementById("extra").innerHTML = '<h2 style="color:red">ERROR: Solution does not work</h2>';
+					
+					new_solved_cube();
+					execute(solves[id][2]);
+				}
+			}
+			
+			function restart() {
+				submitData(newData);
+			}
+
+			function points(optimal, type, submitted, time) {
+				var insertions = numInsertions(type);
+				var limit = [0, 0, 300, 480, 720, 0, 1200][insertions * 2];
+				var solPoints = 2 * (optimal + 2 * insertions - submitted);
+				var timePoints = 0.015 * (limit - time);
+				var bonus = 0;
+				
+				if (submitted <= optimal) {
+					bonus = 10 * insertions;
+				}
+				
+				if (solPoints < 0) {
+					solPoints = 0;
+				}
+				
+				if (timePoints < 0) {
+					timePoints = 0;
+				}
+				
+				return 15 + solPoints + timePoints + bonus;
+			}
+
+			function numInsertions(type) {
+				switch(type) {
+					case "3C":
+					case "3E":
+						return 1;
+						break;
+					case "5C":
+					case "5E":
+						return 1.5;
+						break;
+					case "4C":
+					case "4E":
+					case "3E3C":
+						return 2;
+						break;
+					case "6C":
+					case "7C":
+					case "3E4C":
+					case "3E5C":
+						return 3;
+						break;
+				}
+			}
+			
+			function copy() {
+				document.getElementById("data").select();
+				document.execCommand("copy");
+			}
+			
+			function about() {
+				document.getElementById("extra").innerHTML = ''; // Clear any errors
+				document.getElementById("changing").innerHTML = '<h1>About the Insertion Trainer</h1> \
+					<br/> \
+					<h2>What are insertions?</h2> \
+					<p>Insertions are a technique used for solving the Rubik\'s Cube in the fewest moves. The general idea is that the entire cube is solved, \
+					except for a few pieces. This partial solution, known as a skeleton, is then searched through to find places where these few remaining \
+					pieces can be solved. These pieces are frequently solved using commutators, which are known as insertions for the purposes of this event \
+					due to the way they are inserted into the skeleton. Ideally, some of the moves of the insertions will cancel with some of the moves of the \
+					skeleton, allowing for the cube to be solved much more efficiently.</p> \
+					\
+					<h2>What does this program do?</h2> \
+					<p>This program was created to allow Fewest Moves solvers to practice their skills with insertions without having to do an entire hour-long \
+					solve every time. There are currently ' + amount.toString() + ' insertions of many different types stored in the database, and this number is \
+					constantly increasing. It also has a points system to allow the solver to keep track of their progress over time.</p>\
+					<h2>How do I use this program?</h2> \
+					<p>Click the "Play" button above to try out an insertion! You will be asked for your current data (leave this blank if this is your first \
+					time using the site). Next, choose the insertion type you want to practice. If any of them are greyed out, it means you have done all the \
+					ones we currently have to offer (but don\'t worry, because we plan to frequently add more!). Then, take as much time as you need to find \
+					the best insertion you can, but keep in mind that the faster and more efficient you are, the more points you earn. Try to find the right \
+					balance of time spent and moves canceled to gain the most points. Once you submit a successful solution, you will be given your time, and \
+					you will get to see the optimal solution. You will also be able to export your new data, with your new points added. Unfortunately, you \
+					must currently store all your data locally, but we plan to add more server-side options in the future! \
+					\
+					<h2>How are points calculated?</h2> \
+					<p>Points for each solution are a combination of efficiency and time left over. The exact formula is:</p> \
+					<p id="pre">&nbsp;&nbsp;&nbsp;&nbsp;points = 15 + {2 * [optimal movecount + (2 * number of insertions) - submitted movecount]} + {0.015 * [time limit - seconds taken]} + optimal solution bonus</p> \
+					<p>The number of insertions are determined by the optimal solution given by Insertion Finder, NOT by the solution submitted. The only exception \
+					is for 1-cycle 5c or 5e insertions, which count as 1.5 insertions. This was done because these insertions (although they involve 2 algorithms \
+					each) can be found in one pass, making them faster than other 2-insertion cases.</p> \
+					<p>The optimal solution bonus is achieved if your solution is optimal (or, in rare cases, sub-optimal). It is calculated by multiplying the \
+					amount of insertions by 10. \
+					<p>Exceptions to the formula:</p> \
+					<p>If the submitted movecount is greater than optimal movecount + (2 * number of insertions), this entire part of the formula will be set to 0. \
+					It will never be negative, so points will never be lost for bad attempts.</p> \
+					<p>If the amount of seconds taken is greater than the time limit, this part of the formula will also be set to 0, meaning no points will ever \
+					be lost for going over.</p> \
+					\
+					<h2>How are time limits decided?</h2> \
+					<p>Time limits are decided according to this table:</p> \
+					<table> \
+						<thead> \
+							<td># insertions</td> \
+							<td>Time limit</td> \
+						</thead> \
+						<tr> \
+							<td>1</td> \
+							<td>5:00</td> \
+						</tr> \
+						<tr> \
+							<td>1.5</td> \
+							<td>8:00</td> \
+						</tr> \
+						<tr> \
+							<td>2</td> \
+							<td>12:00</td> \
+						</tr> \
+						<tr> \
+							<td>3</td> \
+							<td>20:00</td> \
+						</tr> \
+					</table> \
+					<p>Admittedly, these time limits are somewhat arbitrary, but they were created to reflect the amount of time that should be spent on these \
+					insertions in a real Fewest Moves solve.</p> \
+					<h2>Who made this program?</h2> \
+					<p>I, Daniel Goodman, originally made this program over a few months for a school project. However, I do plan to update it regularly now that \
+					the initial project is complete.</p> \
+					<h2>Something is VERY broken or doesn\'t work!</h2> \
+					<p>I\'m not surprised, but I do want to know so I can fix it! Send any bug reports or problems you have using the site to \
+					<a href="mailto:dgcubed@gmail.com?Subject=Insertion%20Trainer%20Bug%20Report">dgcubed@gmail.com</a>.</p> \
+					';
+					
+				document.getElementById("specialNavItem").innerHTML = "EXP: " + score;
+			}
+		</script>
+	</head>
+	
+	<body>
+		
+		<ul class="navBar">
+			<li class="navItem" onclick="about()">About</li></a>
+			<li class="navSpace"></li>
+			<li class="navItem" onclick="play()">Play</li></a>
+			<li class="navSpace"></li>
+			<li id="specialNavItem">EXP:</li>
+		</ul>
+		
+		<span id="changing"> </span>
+		<span id="extra"> </span>
+
+	</body>
+</html>

@@ -1,0 +1,198 @@
+#body {
+	background-color:lightblue;
+	font-family:arial;
+	font-size:20px;
+}
+
+/* ID and class "banner" required for sticky navbar */
+.banner {
+	max-width:100%;
+	max-height:100%;
+	margin:auto;
+}
+
+#banner {
+	max-width:100%;
+	max-height:100%;
+	margin:auto;
+}
+
+.bold {
+	font-weight:bold;
+}
+
+ul {
+	list-style-type:none;
+	margin:0px;
+	padding:0px;
+	overflow:hidden;
+	/*background-color:rgba(0,100,255,0.3);*/
+	background-color:#79B5EE;
+	width:100%;
+}
+
+.nav {
+    float:left;
+	font-size:20px;
+	width:16.66666%;
+	height:100%;
+	text-align:center;
+}
+
+.nav a {
+    display:block;
+    color:white;
+    text-align:center;
+	padding:14px 16px;
+    text-decoration:none;
+}
+
+.nav a:hover {
+    background-color:rgba(127, 127, 127, 0.9);
+	text-decoration:none;
+}
+
+#stickyalias {
+	display: none;
+	height: 100px;
+}
+
+#indexBody {
+	text-align:center;
+	vertical-align:top;
+	line-height:140%;
+	padding-left:35px;
+	padding-right:35px;
+	width:100%;
+}
+
+.d3 {
+	text-align:center;
+	vertical-align:top;
+	line-height:150%;
+	padding-left:35px;
+	padding-right:35px;
+}
+
+#aboutBody {
+	text-align:left;
+	vertical-align:top;
+	width:100%;
+	line-height:140%;
+	margin-top:15px;
+	padding-right:35px;
+}
+
+.regularText {
+	font-family:arial;
+	font-size:20px;
+	font-weight:normal;
+}
+
+#footer {
+	text-align:center;
+	vertical-align:center;
+	width:100%;
+	height:35px;
+	background-color:gray;
+}
+
+#videoTable { 
+	margin-left:auto;
+	margin-right:auto;
+	width:100%;
+	padding-top:10px;
+	padding-bottom:10px;
+}
+
+#videoCell {
+	padding-top:10px;
+	padding-bottom:10px;
+	max-width:100%;
+}
+
+/* Used in JS */
+#moreVideoCell {
+	padding-top:10px;
+	padding-bottom:10px;
+	max-width:100%;
+}
+
+.videoPlayer{
+	width:576px;
+	height:324px;
+	margin:10px;
+}
+
+#pbTable {
+	width:100%;
+	height:100%;
+	line-height:150%;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.tableTop {
+	text-align:center;
+	border:2px solid #101010;
+	width:15%;
+}
+
+.tableTopWide {
+	text-align:center;
+	border:2px solid #101010;
+	width:20%;
+}
+
+.pb {
+	height:100%;
+	border:1px solid black;
+}
+
+#picture {
+	float:left;
+	margin-right:22px;
+	margin-bottom:10px;
+	width:600px;
+	height:443px;
+}
+
+#meme {
+	height:400px;
+	padding:20px;
+}
+
+#buttonText {
+	font-size:20px;
+	font-family:arial;
+}
+
+a:link {
+	font-size:100%;color:blue;text-decoration:none;
+}
+
+a:visited {
+	font-size:100%;color:blue;text-decoration:none;
+}
+
+a:hover {
+	font-size:100%;color:white;text-decoration:none;
+}
+
+@media print {
+	.banner, #navBar, #footer, iframe {
+		display:none
+	}
+
+	@page {
+		margin: 0.5cm;
+	}
+}
+
+/* Source: http://www.htmlgoodies.com/beyond/css/targeting-specific-devices-in-your-style-sheets.html */
+@media only screen and (max-device-width:480px) {
+
+	.d3, #aboutBody, .regularText {
+		font-size:10px;
+	}
+}

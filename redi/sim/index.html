@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Redi Sim</title>
+		
+		<style>
+			.button {
+				width:100px;
+				height:50px;
+				border-radius:5px;
+				font-size:25px;
+				margin:5px;
+			}
+			
+			.button:hover {
+				background-color:gray;
+				cursor:pointer;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="gc" width="600" height="450"></canvas>
+		
+		<br/><br/><br/>
+		
+		<div style="text-align:center;">
+		
+			<button class="button" onclick='parseScramble("F")'>F</button>
+			<button class="button" onclick='parseScramble("R")'>R</button>
+			<button class="button" onclick='parseScramble("L")'>L</button>
+			<button class="button" onclick='parseScramble("B")'>B</button>
+			<br/>
+			<button class="button" onclick='parseScramble("f")'>f</button>
+			<button class="button" onclick='parseScramble("r")'>r</button>
+			<button class="button" onclick='parseScramble("l")'>l</button>
+			<button class="button" onclick='parseScramble("b")'>b</button>
+			<br/>
+			<button class="button" onclick='parseScramble("F F")'>F'</button>
+			<button class="button" onclick='parseScramble("R R")'>R'</button>
+			<button class="button" onclick='parseScramble("L L")'>L'</button>
+			<button class="button" onclick='parseScramble("B B")'>B'</button>
+			<br/>
+			<button class="button" onclick='parseScramble("f f")'>f'</button>
+			<button class="button" onclick='parseScramble("r r")'>r'</button>
+			<button class="button" onclick='parseScramble("l l")'>l'</button>
+			<button class="button" onclick='parseScramble("b b")'>b'</button>
+			
+			<br/><br/><br/>
+			
+			<input id="in" type="text" value="" style="width:500px;height:20px;"></input>
+			<button class="button" onclick="submit()" style="height:30px;font-size:20px;">Submit</button>
+			
+			<br/><br/><br/>
+		
+		</div>
+		
+		<script>
+			function submit() {
+				parseScramble(document.getElementById("in").value);
+			}
+		
+			var sides = [	["U", ["white","white","white","white","white","white","white","white"], [300,400,500,300,500,300,400,500], [0,0,0,100,100,200,200,200]	],
+							["F", ["green","green","green","green","green","green","green","green"], [300,400,500,300,500,300,400,500], [300,300,300,400,400,500,500,500]	],
+							["R", ["red","red","red","red","red","red","red","red"], [600,700,800,600,800,600,700,800], [300,300,300,400,400,500,500,500]	],
+							["B", ["blue","blue","blue","blue","blue","blue","blue","blue"], [900,1000,1100,900,1100,900,1000,1100], [300,300,300,400,400,500,500,500]	],
+							["L", ["orange","orange","orange","orange","orange","orange","orange","orange"], [0,100,200,0,200,0,100,200], [300,300,300,400,400,500,500,500]	],
+							["D", ["yellow","yellow","yellow","yellow","yellow","yellow","yellow","yellow"], [300,400,500,300,500,300,400,500], [600,600,600,700,700,800,800,800]	]	];
+							
+			var scale = 2;
+		
+			window.onload = function() {
+				canvas = document.getElementById("gc");
+				ctx = canvas.getContext("2d");
+				
+				drawRedi();
+			}		
+			
+			function drawRedi() {
+				
+				for (i = 0; i < 6; i++) {
+					for (j = 0; j < 8; j++) {
+						ctx.fillStyle = sides[i][1][j];
+						ctx.strokeStyle = "black";
+						ctx.fillRect(sides[i][2][j]/scale,sides[i][3][j]/scale,100/scale,100/scale);
+						ctx.strokeRect(sides[i][2][j]/scale,sides[i][3][j]/scale,100/scale,100/scale);
+					}
+				}
+				
+				
+			}
+			
+			function parseScramble(scramble) {
+				scramble = scramble.split(" ");
+				
+				for (i = 0; i < scramble.length; i++) {
+					
+					var move = scramble[i];
+				
+					for (j = 0; j < move.length; j++) { // twice if prime
+						switch(move.charAt(0)) {
+							case "F":	F();
+										break;
+							case "R":	R();
+										break;
+							case "L":	L();
+										break;
+							case "B":	B();
+										break;
+							case "f":	f();
+										break;
+							case "r":	r();
+										break;
+							case "l":	l();
+										break;
+							case "b":	b();
+										break;
+							default:	break;
+						}
+					}
+					
+				}
+				
+				drawRedi();
+				
+				return scramble;
+			}
+			
+			function genericTurn() {
+				var U = [].concat(sides[0][1]);
+				var F = [].concat(sides[1][1]);
+				var R = [].concat(sides[2][1]);
+				
+				// Change U colors
+				sides[0][1][4] = F[1];
+				sides[0][1][6] = F[4];
+				sides[0][1][7] = F[2];
+				
+				// Change F colors
+				sides[1][1][1] = R[3];
+				sides[1][1][4] = R[1];
+				sides[1][1][2] = R[0];
+				
+				// Change R colors
+				sides[2][1][3] = U[4];
+				sides[2][1][1] = U[6];
+				sides[2][1][0] = U[7];
+			}
+			
+			function F() {
+				genericTurn();
+			}
+			
+			function R() {
+				y();
+				genericTurn();
+				y();
+				y();
+				y();
+			}
+			
+			function L() {
+				y();
+				y();
+				y();
+				genericTurn();
+				y();
+			}
+			
+			function B() {
+				y();
+				y();
+				genericTurn();
+				y();
+				y();
+			}
+			
+			function f() {
+				x();
+				x();
+				y();
+				genericTurn();
+				y();
+				y();
+				y();
+				x();
+				x();
+			}
+			
+			function r() {
+				x();
+				x();
+				genericTurn();
+				x();
+				x();
+			}
+			
+			function l() {
+				x();
+				x();
+				y();
+				y();
+				genericTurn();
+				y();
+				y();
+				x();
+				x();
+			}
+			
+			function b() {
+				x();
+				x();
+				y();
+				y();
+				y();
+				genericTurn();
+				y();
+				x();
+				x();
+			}
+			
+			function y() {
+				var F = [].concat(sides[1][1]);
+				var R = [].concat(sides[2][1]);
+				var B = [].concat(sides[3][1]);
+				var L = [].concat(sides[4][1]);
+				var U = [].concat(sides[0][1]);
+				var D = [].concat(sides[5][1]);
+				
+				sides[1][1] = R;
+				sides[2][1] = B;
+				sides[3][1] = L;
+				sides[4][1] = F;
+				
+				sides[0][1][0] = U[5];
+				sides[0][1][1] = U[3];
+				sides[0][1][2] = U[0];
+				sides[0][1][3] = U[6];
+				sides[0][1][4] = U[1];
+				sides[0][1][5] = U[7];
+				sides[0][1][6] = U[4];
+				sides[0][1][7] = U[2];
+				
+				sides[5][1][0] = D[2];
+				sides[5][1][1] = D[4];
+				sides[5][1][2] = D[7];
+				sides[5][1][3] = D[1];
+				sides[5][1][4] = D[6];
+				sides[5][1][5] = D[0];
+				sides[5][1][6] = D[3];
+				sides[5][1][7] = D[5];
+			}
+			
+			function x() {
+				var F = [].concat(sides[1][1]);
+				var R = [].concat(sides[2][1]);
+				var B = [].concat(sides[3][1]);
+				var L = [].concat(sides[4][1]);
+				var U = [].concat(sides[0][1]);
+				var D = [].concat(sides[5][1]);
+				
+				sides[0][1] = F;
+				sides[1][1] = D;
+				
+				sides[5][1][0] = B[7];
+				sides[5][1][1] = B[6];
+				sides[5][1][2] = B[5];
+				sides[5][1][3] = B[4];
+				sides[5][1][4] = B[3];
+				sides[5][1][5] = B[2];
+				sides[5][1][6] = B[1];
+				sides[5][1][7] = B[0];
+				
+				sides[3][1][0] = U[7];
+				sides[3][1][1] = U[6];
+				sides[3][1][2] = U[5];
+				sides[3][1][3] = U[4];
+				sides[3][1][4] = U[3];
+				sides[3][1][5] = U[2];
+				sides[3][1][6] = U[1];
+				sides[3][1][7] = U[0];
+				
+				sides[2][1][0] = R[5];
+				sides[2][1][1] = R[3];
+				sides[2][1][2] = R[0];
+				sides[2][1][3] = R[6];
+				sides[2][1][4] = R[1];
+				sides[2][1][5] = R[7];
+				sides[2][1][6] = R[4];
+				sides[2][1][7] = R[2];
+				
+				sides[4][1][0] = L[2];
+				sides[4][1][1] = L[4];
+				sides[4][1][2] = L[7];
+				sides[4][1][3] = L[1];
+				sides[4][1][4] = L[6];
+				sides[4][1][5] = L[0];
+				sides[4][1][6] = L[3];
+				sides[4][1][7] = L[5];
+			}
+		</script>
+	</body>
+</html>
