@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Generic Trainer</title>
+		
+		<!--CODE ADAPTED FROM https://productforums.google.com/forum/#!topic/docs/RMKFBdfd3t4-->
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<script type="text/javascript">
+			var cases = [];
+			var data;
+		
+			google.load("visualization", "1", {packages:["corechart"]});
+			google.setOnLoadCallback(drawSheetName);
+
+			function drawSheetName() {
+				//Selects the columns to be extracted
+				var queryString = encodeURIComponent('SELECT A, B, C, F');
+
+				//Change headers=1 to headers=0 to include the first row
+				var query = new google.visualization.Query('https://docs.google.com/spreadsheets/d/1GHtxBQm0rhEvudDzG4Z3noZOJb9eikcaMhNXS8ALWIg/gviz/tq?gid=0&headers=1&tq=' + queryString); 
+				query.send(handleSampleDataQueryResponse);
+			}
+
+			function handleSampleDataQueryResponse(response) {
+				data = response.getDataTable();
+				
+				var count = data.getValue(0,3);
+
+				for(var i = 0; i < count; i++) {
+					if (data.getValue(i,0) == "Y") {
+						cases.push(data.getValue(i,2));
+					}
+				}
+				
+				randomCase();
+			}
+			
+			var timerOn = false;
+			var start = true;
+			var startTime = 0;
+			
+			var auf = ["U","U'","U2", ""];
+			var adf = ["D","D'","D2", ""];
+			
+			var times = [];
+			var scrambles = [];
+			
+			function randomCase() {
+				var rand = Math.floor(Math.random() * cases.length);
+				
+				var returnValue = auf[Math.floor(Math.random() * auf.length)] + " " + adf[Math.floor(Math.random() * adf.length)] + " " + 
+					cases[rand] + " " + auf[Math.floor(Math.random() * auf.length)] + " " + adf[Math.floor(Math.random() * adf.length)];
+				document.getElementById("setUp").innerHTML = "Scramble: " + returnValue;
+				scrambles.push(data.getValue(rand,1));
+			}
+		
+			document.addEventListener("keydown",function(event){
+				if (timerOn && event.which == 32) {
+					stopTimer();
+					document.getElementById("plusTwo").innerHTML = "+2";
+					document.getElementById("DNF").innerHTML = "DNF";
+					plusTwoed = false;
+					DNFed = false;
+				} else if (!timerOn && event.which == 32) {
+					document.getElementById("timer").style.color = "green";
+				}
+			});
+			
+			document.addEventListener("keyup",function(event){
+				if (!timerOn && start && event.which == 32) {
+					document.getElementById("timer").style.color = "black";
+					startTimer();
+				} else if (!timerOn && !start && event.which == 32) {
+					start = true;
+				}
+			});
+			
+			function startTimer() {
+				d1 = new Date();
+				startTime = d1.getTime();
+				document.getElementById("timer").innerHTML = "running";
+				
+				timerOn = true;
+			}
+			
+			function stopTimer() {
+				d1 = new Date();
+				document.getElementById("timer").innerHTML = (d1.getTime() - startTime) / 1000;
+				
+				times.push((d1.getTime() - startTime) / 1000);
+				printTimes(false);
+				
+				timerOn = false;
+				start = false;
+				randomCase();
+			}
+			
+			function printTimes(deleted) {
+				var current = document.getElementById("times").innerHTML;
+				if (!deleted) {
+					document.getElementById("times").innerHTML = current + "<span id=\"a" + (times.length - 1) + "\" onclick=\"deleteTime(this)\"><br/>" + times[times.length - 1] + " - " + scrambles[scrambles.length - 1] + "</span>";
+				} else {
+					document.getElementById("times").innerHTML = "";
+					for (var i = 0; i < times.length; i++) {
+						current = document.getElementById("times").innerHTML;
+						document.getElementById("times").innerHTML = current + "<span id=\"a" + (i) + "\" onclick=\"deleteTime(this)\"><br/>" + times[i] + " - " + scrambles[i] + "</span>";
+					}
+				}
+				
+				document.getElementById("info").innerHTML = "<a onclick=\"deleteAll()\" style=\"text-decoration:underline;\">x</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Times: " + (times.length - countDNFs()) + "/" + times.length + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mean: " + getMean();
+				document.getElementById("avg").innerHTML = "Current average of 5: " + getAverage(5) + "<br/>Current average of 12: " + getAverage(12);
+			}
+			
+			function deleteAll() {
+				var response = confirm("This will delete all your times. Are you sure you want to proceed?");
+				if (response) {
+					document.getElementById("times").innerHTML = "";
+					times = [];
+					document.getElementById("info").innerHTML = "<a onclick=\"deleteAll()\" style=\"text-decoration:underline;\">x</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Times: " + (times.length - countDNFs()) + "/" + times.length + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mean: N/A";
+				}			
+			}
+			
+			
+			function deleteTime(htmlElement) {
+				if (confirm("This will delete the time you clicked on. Are you sure you want to proceed?")) {
+					htmlElement.parentNode.removeChild(htmlElement);
+					times.splice(Number(htmlElement.id.substr(1,2)),1);
+					scrambles.splice(Number(htmlElement.id.substr(1,2)),1);
+					printTimes(true);
+				}
+			}
+			
+			function getMean() {
+				var sum = 0;
+				var amount = 0;
+				for (i = 0; i < times.length; i++) {
+					if (times[i] < 999999999998) {
+						sum = sum + times[i];
+						amount = amount + 1;
+					}
+				}
+				
+				if (amount > 0) {
+					return Math.round((sum / amount) * 1000) / 1000;
+				}
+				
+				return "N/A";
+			}
+			
+			function getAverage(amount) {
+				if (times.length >= amount) {
+					var max = 0;
+					var min = times[times.length - 1];
+					var sum = 0;
+					
+					for (i = 0; i < amount; i++) {
+						if (times[times.length - 1 - i] > max) {
+							max = times[times.length - 1 - i];
+						} else if (times[times.length - 1 - i] < min) {
+							min = times[times.length - 1 - i];
+						}
+						
+						sum = sum + times[times.length - 1 - i];
+					}
+					
+					sum = sum - min - max;
+					
+					var avg = Math.round((sum / (amount - 2)) * 1000) / 1000;
+					
+					if (avg < 99999999999) {
+						return avg;
+					}
+					
+					return "DNF";
+				}
+				
+				return "N/A";
+			}
+			
+			var plusTwoed = false;
+			
+			function plusTwo() {
+				if (!plusTwoed && !DNFed) {
+					var last = times.length - 1;
+					times[last] = times[last] + 2.000;
+					document.getElementById("a" + last).innerHTML = (Math.round(times[last] * 1000) / 1000) + "+ - " + scrambles[scrambles.length - 2];
+					document.getElementById("plusTwo").innerHTML = "OK";
+					plusTwoed = true;
+				} else if (plusTwoed && !DNFed) {
+					var last = times.length - 1;
+					times[last] = times[last] - 2.000;
+					document.getElementById("a" + last).innerHTML = (Math.round(times[last] * 1000) / 1000) + " - " + scrambles[scrambles.length - 2];
+					document.getElementById("plusTwo").innerHTML = "+2";
+					plusTwoed = false;
+				}
+				
+				document.getElementById("info").innerHTML = "<a onclick=\"deleteAll()\" style=\"text-decoration:underline;\">x</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Times: " + (times.length - countDNFs()) + "/" + times.length + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mean: " + getMean();
+			}
+			
+			var DNFed = false;
+			
+			function DNF() {
+				if (!DNFed && !plusTwoed) {
+					var last = times.length - 1;
+					times[last] = times[last] + 999999999999.000;
+					document.getElementById("a" + last).innerHTML = "DNF - " + scrambles[scrambles.length - 2];
+					document.getElementById("DNF").innerHTML = "OK";
+					DNFed = true;
+				} else if (DNFed && !plusTwoed) {
+					var last = times.length - 1;
+					times[last] = times[last] - 999999999999.000;
+					document.getElementById("a" + last).innerHTML = (Math.round(times[last] * 1000) / 1000) + " - " + scrambles[scrambles.length - 2];
+					document.getElementById("DNF").innerHTML = "DNF";
+					DNFed = false;
+				}
+				
+				document.getElementById("info").innerHTML = "<a onclick=\"deleteAll()\" style=\"text-decoration:underline;\">x</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Times: " + (times.length - countDNFs()) + "/" + times.length + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mean: " + getMean();
+				document.getElementById("avg").innerHTML = "Current average of 5: " + getAverage(5) + "<br/>Current average of 12: " + getAverage(12);
+			}
+			
+			function countDNFs() {
+				var count = 0;
+			
+				for (i = 0; i < times.length; i++) {
+					if (times[i] >= 999999999999.000) {
+						count = count + 1;
+					}
+				}
+				
+				return count;
+			}
+			
+		</script>
+		
+	</head>
+	
+	<body id="body">
+		<table class="d3">
+			<tr class="d3">
+				<td class="d3">
+					
+					<table style="width:100%;text-align:center;">
+						<tr style="width:100%;">
+							<td style="width:70%;border:2px solid black;">
+								<p id="setUp"></p>
+								<p id="timer" style="font-size:80px;">0.000</p>
+								<p><a id="plusTwo" onclick="plusTwo()">+2</a>&nbsp;&nbsp;<a id="DNF" onclick="DNF()">DNF</a></p>
+							</td>
+							<td style="width:30%;border:2px solid black;">
+								<p id="info"><a onclick="deleteAll()" style="text-decoration:underline;">x</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Times: 0/0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mean: N/A</p>
+								<p id="avg">Current average of 5: N/A<br/>Current average of 12: N/A</p>
+								<p id="times" style="text-align:center;vertical-align:top;height:350px;overflow-y:auto;"></p>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>
