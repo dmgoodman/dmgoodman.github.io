@@ -7,6 +7,7 @@
 		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 		<script type="text/javascript">
 			var cases = [];
+			var names = [];
 			var data;
 		
 			google.load("visualization", "1", {packages:["corechart"]});
@@ -28,6 +29,7 @@
 
 				for(var i = 0; i < count; i++) {
 					if (data.getValue(i,0) == "Y") {
+						names.push(data.getValue(i,1));
 						cases.push(data.getValue(i,2));
 					}
 				}
