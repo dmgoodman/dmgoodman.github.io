@@ -41,6 +41,7 @@
 			var start = true;
 			var startTime = 0;
 			
+			var flip = ["flip ",""];
 			var auf = ["U","U'","U2", ""];
 			var adf = ["D","D'","D2", ""];
 			
@@ -50,7 +51,7 @@
 			function randomCase() {
 				var rand = Math.floor(Math.random() * cases.length);
 				
-				var returnValue = auf[Math.floor(Math.random() * auf.length)] + " " + adf[Math.floor(Math.random() * adf.length)] + " " + 
+				var returnValue = flip[Math.floor(Math.random() * flip.length)] + auf[Math.floor(Math.random() * auf.length)] + " " + adf[Math.floor(Math.random() * adf.length)] + " " + 
 					cases[rand] + " " + auf[Math.floor(Math.random() * auf.length)] + " " + adf[Math.floor(Math.random() * adf.length)];
 				document.getElementById("setUp").innerHTML = "Scramble: " + returnValue;
 				scrambles.push(names[rand]);
