@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Breakout</title>
+	</head>
+	<body>
+		<canvas id="gc" width="400" height="400"></canvas>
+		<script>
+			// Declare and initialize all global variables			
+			
+				// x and y coordinates and x-velocity of the paddle
+				var p1x = 160;
+				var p1y = 340;
+				var p1xv = 0;
+				
+				// x and y coordinates and velocities of the ball
+				var multipliers = [1,-1]; // an array to randomize the x-direction of the ball at the start
+				var bx = 190;
+				var by = 160;
+				var bd = 20; // Ball dimension
+				var bxv = 5 * multipliers[Math.floor((Math.random() * 2))]; // x-velocity: -5 or 5
+				var byv = Math.random() * 5 + 5; // y-velocity: [0,10)
+				
+				var blocks; // Array of blocks
+				resetBlocks(); // Add blocks and their x and y coordinates to an array
+				
+				var score = 0;
+				var level = 0; // level variable is always 1 less than actual level
+				var lives = 3;
+				
+				var totalDestroyed = 0; // No blocks have been destroyed
+				
+				var colors = ["white","red","orange","yellow","lime","dodgerblue","fuchsia"]; // Colors for each level; level 7 and on flashes between black and white
+
+				var started = false; // true when game has started (when the user presses space)
+				var stopped = false; // true once user has lost all lives and reached game over screen
+				
+				var frameCount = 0; // Used only for level 7 and up; counts frames
+				var lastBounce = 0;
+				
+			// Global variables declared and initialized
+			
+			window.onload = function() { // Default stuff to do onload
+				canv = document.getElementById("gc");
+				ctx = canv.getContext("2d");
+				document.addEventListener("keydown",keyPush);
+				document.addEventListener("keyup",keyRelease);
+				setInterval(game,1000/20); // 20FPS
+			}
+			
+			// Master function called every frame
+			// Checks if game has not yet started, is in progress, or has stopped
+			function game() {
+				if (!started) { // If game has not started, show the start screen
+					ctx.fillStyle = "black";
+					ctx.fillRect(0,0,canv.width,canv.height);
+					
+					ctx.fillStyle = "white";
+					ctx.font="40px Courier";
+					ctx.fillText("Press SPACE",60,115);
+					ctx.fillText("to begin.",80,165);
+				} else if (stopped) { // If the game has ended, show the game over screen
+					ctx.fillStyle = "black";
+					ctx.fillRect(0,0,canv.width,canv.height);
+					
+					ctx.fillStyle = "white";
+					ctx.font="40px Courier";
+					ctx.fillText("Game over",80,115);
+					ctx.fillText("Score: " + score,80,165);
+					ctx.fillText("Level: " + (level + 1),80,215);
+				} else { // Otherwise, play the game
+					play();
+				}
+			}
+			
+			// Function called every frame when the game is underway
+			function play() {
+				frameCount += 1; // Possible glitch if this gets too big?
+			
+				if ((p1x + p1xv) <= 340 && (p1x + p1xv) >= 0) { // If the paddle's position will not be out of bounds, move it
+					p1x += p1xv;
+				}
+				
+				if ((by + byv) <= 390 && (by + byv) >= 0) { // If the ball's position will not be out of bounds of the canvas
+					if ((by + byv) >= 380) { // If it is below the paddle, lose a life
+						lives -= 1;
+						if (lives < 0) { // If all lives are lost, end the game
+							stopped = true;
+						} else { // Otherwise, reset the ball
+							resetBall();
+						}
+					}
+				} else { // If the ball's position will be out of bounds, reverse its direction
+					byv *= -1;
+				}
+
+				if (Math.abs(p1y - 20 - by) < 5 && Math.abs(p1x + 20 - bx) < 45 && (frameCount - lastBounce) > 4) {
+					byv *= -1;
+					lastBounce = frameCount;
+				}
+				
+				by += byv;
+				
+				if ((bx + bxv) <= 380 && (bx + bxv) >= 0) {
+				
+				} else {
+					bxv *= -1;
+				}
+				
+				bx += bxv;
+				
+				var amountDestroyed = 0;
+				for (r = 0; r < blocks.length; r++) {
+					for (c = 0; c < blocks[r].length; c++) {
+						var xDist = Math.abs(blocks[r][c][0] + 10 - bx);
+						var yDist = Math.abs(blocks[r][c][1] + 10 - by);
+						
+						if (overlap(bx,by,bd,bd,blocks[r][c][0] + 2,blocks[r][c][1],36,18)) {
+							blocks[r][c] = [500,500];
+							amountDestroyed += 1;
+							totalDestroyed += 1;
+							
+							// SCREAM!
+							var screams = [new Audio("ow.wav"), new Audio("ooh.wav")];
+							screams[Math.floor(Math.random() * 2)].play();
+							
+							if (xDist / 2.0 < yDist) {
+								byv *= -1;
+							} else {
+								bxv *= -1;
+							}
+						}
+					}
+				}
+				
+				var addToScore = 0;
+				if (amountDestroyed == 1) {
+					addToScore = 100;
+				} else if (amountDestroyed == 2) {
+					addToScore = 250;
+				} else if (amountDestroyed >= 3) {
+					addToScore = amountDestroyed * 150;
+				}
+				
+				if ((score % 10000) + addToScore >= 10000) {
+					lives += 1;
+				}
+				
+				score += addToScore;
+				
+				if (totalDestroyed == 50) {
+					totalDestroyed = 0;
+					level += 1;
+					resetBlocks();
+				}
+				
+				ctx.fillStyle = "black";
+				ctx.fillRect(0,0,canv.width,canv.height);
+				
+				for (r = 0; r < blocks.length; r++) {
+					for (c = 0; c < blocks[r].length; c++) {
+						if (level >= 7) {
+							if (frameCount % 20 < 5) {
+								ctx.fillStyle = "white";
+								ctx.fillRect(blocks[r][c][0] + 2,blocks[r][c][1],36,18);
+							} else {
+								ctx.fillStyle = "black";
+								ctx.fillRect(blocks[r][c][0] + 2,blocks[r][c][1],36,18);
+							}							
+						} else {
+							ctx.fillStyle = colors[level];
+							ctx.fillRect(blocks[r][c][0] + 2,blocks[r][c][1],36,18);
+						}
+					}
+				}
+
+				ctx.fillStyle = "white";
+				ctx.fillRect(p1x,p1y,60,20);
+				ctx.fillRect(bx,by,bd,bd);
+				
+				for (i = 0; i < lives; i++) {
+					ctx.fillRect((i + 1) * 20,20,16,16);
+				}
+				
+				ctx.font = "20px Courier";
+				ctx.fillText(score,300,30);
+			}
+			
+			function keyPush(event) {
+				if (event.keyCode == 37 && started) { // Left arrow
+					p1xv = -10;
+				} else if (event.keyCode == 39 && started) { // Right arrow
+					p1xv = 10;
+				} else if (event.keyCode == 32 && !started) { // Space
+					started = true;
+				}
+			}
+			
+			function keyRelease(event) {
+				if (event.keyCode == 37 && started) { // Left arrow
+					$(document).keydown(function(event2) {
+						if(event2.keyCode == 39) {
+							p1xv = -10;
+						} else {
+							p1xv = 0;
+						}
+					});
+				} else if (event.keyCode == 39 && started) { // Right arrow
+					$(document).keydown(function(event2) {
+						if(event2.keyCode == 39) {
+							p1xv = 10;
+						} else {
+							p1xv = 0;
+						}
+					});
+				}
+			}
+			
+			function resetBall() {				
+				// x and y coordinates and velocities of the ball
+				bx = 190;
+				by = 160;
+				bxv = 5 * multipliers[Math.floor((Math.random() * 2))]; // x-velocity: -5 or 5
+				byv = Math.random() * 5 + 5; // y-velocity: [0,10)
+			}
+			
+			function resetBlocks() {
+				blocks = [	[],
+							[],
+							[],
+							[],
+							[]	];
+		
+				for (r = 0; r < 5; r++) {
+					for (c = 0; c < 10; c++) {
+						blocks[r].push([(c) * 40, (r + 1) * 20 + 30]);
+					}
+				}
+			}
+			
+			// Takes in the upper left x and y coordinates, width, and height of objects A and Blinky
+			// Returns whether or not these two objects overlap
+			function overlap(xa,ya,dxa,dya,xb,yb,dxb,dyb) {
+				if (xa + dxa >= xb && ya + dya >= yb && xa <= xb && ya <= yb) {
+					return true;
+				} else if (xa <= xb + dxb && ya + dya >= yb && xa >= xb && ya <= yb) {
+					return true;
+				} else if (xa <= xb + dxb && ya <= yb + dyb && xa >= xb && ya >= yb) {
+					return true;
+				} else if (xa + dxa >= xb && ya <= yb + dyb && xa <= xb && ya >= yb) {
+					return true;
+				}
+				
+				return false;
+			}
+		</script>
+	</body>
+</html>
