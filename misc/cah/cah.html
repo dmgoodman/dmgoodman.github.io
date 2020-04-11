@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<script type="text/javascript">
+			google.load("visualization", "1", {packages:["corechart"]});
+			google.setOnLoadCallback(drawSheetName);
+
+			function drawSheetName() {
+				//Selects the columns to be extracted
+				var queryString = encodeURIComponent('SELECT B, C, D, E, F');
+
+				//Change headers=1 to headers=0 to include the first row
+				var query = new google.visualization.Query('https://docs.google.com/spreadsheets/d/1TTGso4T6VqZXdIxjyQdS-1Hf0MdFd_Fmxnxt-jbjIdA/gviz/tq?gid=0&headers=1&tq=' + queryString); 
+				query.send(handleSampleDataQueryResponse);
+			}
+
+			function handleSampleDataQueryResponse(response) {
+				
+				var data = response.getDataTable();
+				console.log(data);
+				document.getElementById("name").innerHTML = data.getValue(0, 0);
+			}
+		</script>
+	</head>
+	<body>
+		<p id="name"></p>
+	</body>
+</html>
