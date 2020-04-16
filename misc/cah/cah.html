@@ -18,12 +18,91 @@
 			function handleSampleDataQueryResponse(response) {
 				
 				var data = response.getDataTable();
-				console.log(data);
-				document.getElementById("name").innerHTML = data.getValue(0, 0);
+				var p1Row = parseInt(data.getValue(8, 2)) - 1;
+				var p2Row = parseInt(data.getValue(9, 2)) - 1;
+				
+				document.getElementById("p1name").innerHTML = data.getValue(p1Row, 0);
+				document.getElementById("p1fact1").innerHTML = "- " + data.getValue(p1Row, 2);
+				document.getElementById("p1fact2").innerHTML = "- " + data.getValue(p1Row, 3);
+				document.getElementById("p1fact3").innerHTML = "- " + data.getValue(p1Row, 4);
+				
+				document.getElementById("p2name").innerHTML = data.getValue(p2Row, 0);
+				document.getElementById("p2fact1").innerHTML = "- " + data.getValue(p2Row, 2);
+				document.getElementById("p2fact2").innerHTML = "- " + data.getValue(p2Row, 3);
+				document.getElementById("p2fact3").innerHTML = "- " + data.getValue(p2Row, 4);				
+			}
+			
+			function win(element) {
+				var cur = element.alt;
+				if (cur == "blank") {
+					element.src = "winning-cube.png";
+					element.alt = "colored";
+				} else {
+					element.src = "blank-cube.png";
+					element.alt = "blank";
+				}
 			}
 		</script>
+		
+		<style>
+			h1 {
+				font-family:Arial;
+			}
+			
+			h2 {
+				font-family:Arial;
+			}
+			
+			img {
+				height:50px;
+				width:50px;
+				padding-right:10px;
+			}
+		</style>
 	</head>
 	<body>
-		<p id="name"></p>
+		<table>
+			<tr>
+				<td></td>
+				<td>
+					<h1 id="p1name"></h1>
+					<h2 id="p1fact1"></h2>
+					<h2 id="p1fact2"></h2>
+					<h2 id="p1fact3"></h2>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<img alt="blank" src="blank-cube.png" onclick="win(this);">
+					<img alt="blank" src="blank-cube.png" onclick="win(this);">
+					<img alt="blank" src="blank-cube.png" onclick="win(this);">
+					<img alt="blank" src="blank-cube.png" onclick="win(this);">
+					<img alt="blank" src="blank-cube.png" onclick="win(this);">
+					<br><br><br>
+				</td>
+			</tr>
+			
+			<tr>	
+				<td></td>
+				<td>
+					<h1 id="p2name"></h1>
+					<h2 id="p2fact1"></h2>
+					<h2 id="p2fact2"></h2>
+					<h2 id="p2fact3"></h2>
+				</td>
+			</tr>
+			
+			<tr>
+				<td></td>
+				<td>
+					<img alt="blank" src="blank-cube.png" onclick="win(this);">
+					<img alt="blank" src="blank-cube.png" onclick="win(this);">
+					<img alt="blank" src="blank-cube.png" onclick="win(this);">
+					<img alt="blank" src="blank-cube.png" onclick="win(this);">
+					<img alt="blank" src="blank-cube.png" onclick="win(this);">
+				</td>
+			</tr>
+		</table>
 	</body>
 </html>
