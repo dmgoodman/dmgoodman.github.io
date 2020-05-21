@@ -5,7 +5,7 @@ html {
 
 body {
 	margin-bottom: 60px; /* Margin bottom by footer height */
-	background-color:rgba(0,180,230,0.2);
+	background-color:#f0ffff;
 }
 
 .footer {
@@ -18,11 +18,11 @@ body {
 }
 
 .fixed-top.scrolled {
-	background-color:#292b2c !important;
+	background-color:#a0afaf !important;
 	transition: background-color 200ms linear;
 }
 
 .fixed-top {
-	background-color:rgba(0,0,255,0.6) !important;
+	background-color:#292b2c !important;
 	transition: background-color 200ms linear;
 }
