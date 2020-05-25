@@ -27,6 +27,22 @@
 			});
 		</script>
 
+		<style>
+			.custom-form-control {
+			    height: calc(1.5em + .75rem + 2px);
+			    padding: .375rem .75rem;
+			    font-size: 1rem;
+			    font-weight: 400;
+			    line-height: 1.5;
+			    color: #495057;
+			    background-color: #fff;
+			    background-clip: padding-box;
+			    border: 1px solid #ced4da;
+			    border-radius: .25rem;
+			    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+			}
+		</style>
+
 		<!--CODE ADAPTED FROM https://productforums.google.com/forum/#!topic/docs/RMKFBdfd3t4-->
 		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 		<script type="text/javascript">
@@ -35,7 +51,7 @@
 
 			function drawSheetName() {
 				//Selects the columns to be extracted
-				var queryString = encodeURIComponent('SELECT B, C, D, E, F, G, H, I, J, K, L');
+				var queryString = encodeURIComponent('SELECT B, C, D, E, F, G, H, I, J, K, L, M, N');
 
 				//Change headers=1 to headers=0 to include the first row
 				var query = new google.visualization.Query('https://docs.google.com/spreadsheets/d/1Bvyksa6J_25ciXkU69vmrVcp38jZO-ENuIqZANwJwIs/gviz/tq?gid=0&headers=1&tq=' + queryString); 
@@ -45,7 +61,7 @@
 			function handleDataQueryResponse(response) {
 				var data = response.getDataTable();
 				
-				var events = ["222","333","444","555","666","777","pyram","minx","sq1","skewb","333oh","333bf","444bf","555bf","333mbf","333wf","333fm","clock"];
+				var events = ["222","333","444","555","666","777","pyram","minx","sq1","skewb","333oh","333bf","444bf","555bf","333mbf","333ft","333fm","clock"];
 
 				var event = document.getElementById("event");
 				var eventcode = event.options[event.selectedIndex].value;
@@ -74,6 +90,11 @@
 				document.getElementById("ao100").innerHTML = ao100;
 				var ao1000 = data.getValue(eventnum, 7);
 				document.getElementById("ao1000").innerHTML = ao1000;
+
+				var wcasingle = data.getValue(eventnum, 11);
+				document.getElementById("wcasingle").innerHTML = wcasingle;
+				var wcaaverage = data.getValue(eventnum, 12);
+				document.getElementById("wcaaverage").innerHTML = wcaaverage;
 			}
 		</script>
 
@@ -83,7 +104,7 @@
 
 		<!-- Navbar common to all pages -->
 		<nav class="navbar navbar-expand-md navbar-dark fixed-top">
-			<a class="navbar-brand" href="#">DGCubes</a>
+			<a class="navbar-brand" href="#"><img src="../../static/img/DGCubes.png" style="width:30px;" alt="Logo"></a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
@@ -112,9 +133,14 @@
 		</nav>
 
 		<main role="main" class="container">
+
 			<div class="row">
-				<div class="col-3">
-				    <select name="event" id="event" class="mt-3" onchange="drawSheetName()">
+				<div class="col-lg-8">
+				    <h1><span id="eventname">3x3x3 Cube</span> - <span id="global">loading</span> global average</h1>
+				</div>
+				<div class="col-lg-4 text-right">
+				    <label for="event"><h5>Event:&nbsp;</h5></label>
+				    <select name="event" id="event" class="custom-form-control mt-3" onchange="drawSheetName()">
 				    	<option value="333">3x3x3 Cube</option>
 				    	<option value="222">2x2x2 Cube</option>
 				    	<option value="444">4x4x4 Cube</option>
@@ -134,9 +160,7 @@
 				    	<option value="333mbf">3x3x3 Multi-Blind</option>
 				    	<option value="333ft">3x3x3 With Feet</option>
 				    </select>
-				</div>
-				<div class="col-9">
-				    <h1><span id="eventname">3x3x3 Cube</span> - <span id="global">loading</span> global average</h1>
+				    <br/><br/><br/>
 				</div>
 			</div>
 
@@ -148,9 +172,12 @@
 			<br/>
 
 			<div class="row">
-				<div class="col-4">
-				<h2>Personal Bests:</h2>
-			</div>
+				<div class="col-5">
+					<h2>Personal Bests:</h2>
+				</div>
+				<div class="col-7">
+					<h2>Personal Records:</h2>
+				</div>
 			</div>
 		    <div class="row mt-3">
 				<div class="col-2 text-right">
@@ -162,7 +189,7 @@
 					<h4 class="mb-3">Ao100</h4>
 					<h4 class="mb-3">Ao1000</h4>
 				</div>
-				<div class="col-10 text-left">
+				<div class="col-3 text-left">
 					<h4 class="mb-3"><span id="single">--</span></h4>
 					<h4 class="mb-3"><span id="mo3">--</span></h4>
 					<h4 class="mb-3"><span id="ao5">--</span></h4>
@@ -170,6 +197,14 @@
 					<h4 class="mb-3"><span id="ao50">--</span></h4>
 					<h4 class="mb-3"><span id="ao100">--</span></h4>
 					<h4 class="mb-3"><span id="ao1000">--</span></h4>
+				</div>
+				<div class="col-2 text-right">
+					<h4 class="mb-3">Single</h4>
+					<h4 class="mb-3">Average</h4>
+				</div>
+				<div class="col-5 text-left">
+					<h4 class="mb-3"><span id="wcasingle">--</span></h4>
+					<h4 class="mb-3"><span id="wcaaverage">--</span></h4>
 				</div>
 			</div>
 		</main>

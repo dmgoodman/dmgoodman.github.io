@@ -26,3 +26,8 @@ body {
 	background-color:#292b2c !important;
 	transition: background-color 200ms linear;
 }
+
+.fixed-top:hover {
+	background-color:#292b2c !important;
+	transition: background-color 200ms linear;
+}
