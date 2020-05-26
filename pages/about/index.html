@@ -27,13 +27,38 @@
 			});
 		</script>
 
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<script type="text/javascript">
+			google.load("visualization", "1", {packages:["corechart"]});
+			google.setOnLoadCallback(drawSheetName);
+
+			function drawSheetName() {
+				// Selects the columns to be extracted
+				var queryString = encodeURIComponent('SELECT D, E');
+
+				// Change headers=1 to headers=0 to include the first row
+				var query = new google.visualization.Query('https://docs.google.com/spreadsheets/d/1mSxqu3QTCRvVPWbFbMAZXrXkcaVbpnAqyyryCMwHqk0/gviz/tq?gid=0&headers=1&tq=' + queryString); 
+				query.send(handleSampleDataQueryResponse);
+			}
+
+			function handleSampleDataQueryResponse(response) {
+				var data = response.getDataTable();
+				
+				var comps = data.getValue(0,0); // (row, column)
+				var solves = data.getValue(0,1);
+				
+				document.getElementById("solves").innerHTML = solves;
+				document.getElementById("comps").innerHTML = comps;
+			}
+		</script>
+
 	</head>
 
 	<body>
 
 		<!-- Navbar common to all pages -->
 		<nav class="navbar navbar-expand-md navbar-dark fixed-top">
-			<a class="navbar-brand" href="#"><img src="../../static/img/DGCubes.png" style="width:30px;" alt="Logo"></a>
+			<a class="navbar-brand" href="../../"><img src="../../static/img/DGCubes.png" style="width:30px;" alt="Logo"></a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
@@ -66,17 +91,17 @@
 		        <div class="col-md-12">
 	                <img src="../../static/img/athens.jpg" alt="Daniel Goodman in Athens" class="image-wrapper float-left pr-4 pb-3 w-50">
 		            <div class="single-post-content-wrapper">
-		                <!-- TO INCLUDE: Facebook, Soundcloud, Spotify -->
-						Hey there! My name is Daniel Goodman, but you may know me better in the cubing community as DGCubes. I started my <a href="https://www.youtube.com/DGCubes" target="_blank">YouTube channel</a> on May 10, 2013 and have uploaded semi-consistently since then. Starting out, I focused mainly on unboxings and reviews of the latest speedcubes, but over time I've thrown story videos, Q&As, comedy videos, and plenty of other one-off ideas I have into the mix-- expect a lot of satire. (And for some extreme satire, check out <a href="https://www.youtube.com/DGSidequest" target="_blank">my second channel</a> where I upload... er, literal trash every once in a while.) As far as equipment goes, I edit with Adobe Premiere Elements 12, and I record with my Samsung Galaxy S9 for video and a Blue Snowball iCE for audio. I'm sponsored by
-						<a href="https://cubedepotusa.com/?aff=7" target="_blank">CubeDepot</a>, an online cube retailer based in New York. They've done a lot for me so make sure to check them out, and save 5% off with the discount code DGCubes at checkout!
+						Hey there! My name is Daniel Goodman, but you may know me better in the cubing community as DGCubes. I started my <a href="https://www.youtube.com/DGCubes" target="_blank">YouTube channel</a> on May 10, 2013 and have uploaded semi-consistently since then. Starting out, I focused mainly on unboxings and reviews of the latest speedcubes, but over time I've thrown story videos, Q&As, comedy videos, and plenty of other one-off ideas I have into the mix-- expect a lot of satire. (And for some extreme satire, check out <a href="https://www.youtube.com/DGSidequest" target="_blank">my second channel</a> where I upload... er, literal trash every once in a while.) As far as equipment goes, I edit with Adobe Premiere Elements 12, and I record with my Samsung Galaxy S9 for video and a Blue Snowball iCE for audio. I'm sponsored by <a href="https://cubedepotusa.com/?aff=7" target="_blank">CubeDepot</a>, an online cube retailer based in New York. They've done a lot for me so make sure to check them out, and save 5% off with the discount code DGCubes at checkout!
 						<br/><br/>
-						I've got quite a few other cubing-related projects as well. I co-host the <a href="https://www.youtube.com/DlsonePodcastOfficial" target="_blank">Dlsone Podcast</a> with <a href="https://www.youtube.com/TheRubiksCubed" target="_blank">TheRubiksCubed</a>, <a href="https://www.youtube.com/TheProgrammingCuber" target="_blank">TheProgrammingCuber</a>, <a href="https://www.youtube.com/DerpyCuber" target="_blank">Derpy Cuber</a>, <a href="https://www.youtube.com/HashtagCuber" target="_blank">Hashtag Cuber</a>, and <a href="https://www.youtube.com/JRCuber" target="_blank">JRCuber</a>. I'm also a commentator and member of the organization team for <a href="">Cubing at Home</a>, an online cubing competition that has had thousands of participants to date; check out the next one on the CubingUSA Twitch channel! Separately from that but also on Twitch, I do semi-regular livestreams where you can find me practicing speedcubing, doing Q&As with chat, and tons of other fun stuff in the future! It'd be great for you stop by at <a href="" target="_blank">DGCubesLive</a>.
+						I've got quite a few other cubing-related projects as well. I co-host the <a href="https://www.youtube.com/DlsonePodcastOfficial" target="_blank">Dlsone Podcast</a> with <a href="https://www.youtube.com/TheRubiksCubed" target="_blank">TheRubiksCubed</a>, <a href="https://www.youtube.com/TheProgrammingCuber" target="_blank">TheProgrammingCuber</a>, <a href="https://www.youtube.com/DerpyCuber" target="_blank">Derpy Cuber</a>, <a href="https://www.youtube.com/HashtagCuber" target="_blank">Hashtag Cuber</a>, and <a href="https://www.youtube.com/JRCuber" target="_blank">JRCuber</a>. I'm also a commentator and member of the organization team for <a href="https://www.cubingathome.com/" target="_blank">Cubing at Home</a>, an online cubing competition that has had thousands of participants to date; check out the next one on the CubingUSA Twitch channel! Separately from that but also on Twitch, I do semi-regular livestreams where you can find me practicing speedcubing, doing Q&As with chat, and tons of other fun stuff in the future! It'd be great for you stop by at <a href="https://www.twitch.tv/dgcubeslive" target="_blank">DGCubesLive</a>.
 						<br/><br/>
-						On the topic of speedcubing, I've been solving cubes since April 2012 and speedcubing competitively since January 2013. So far I've been to <span id="comps">loading</span> competitions and I've completed <span id="solves">loading</span> official solves. Additionally, I was the 2018 US national champion in Pyraminx, and I've been ranked in the top 10 worldwide for Pyraminx average. I also practice and have results in every WCA event; one of my overall goals is to eventually be a platinum member, and so far I've made it up to bronze (which corresponds to at least a single result in every event). You can find the rest of my official results on my <a href="https://www.worldcubeassociation.org/results/p.php?i=2013GOOD01" target="_blank">WCA profile</a>. I've also speedsolved some unofficial events in the past; my favorite is Redi Cube, but I also enjoy Curvy Copter, cuboids like 3x3x5, and the Mirror Cube, among other events. I've always been an advocate for more events in the WCA, and these would be some of my top choices.
+						On the topic of speedcubing, I've been solving cubes since April 2012 and speedcubing competitively since January 2013. So far I've been to <span id="comps">56</span> competitions and I've completed <span id="solves">2231</span> official solves. Additionally, I was the <a href="https://www.youtube.com/watch?v=08AtTIeucUc" target="_blank">2018 US national champion in Pyraminx</a>, and I've been ranked in the top 10 worldwide for Pyraminx average. I also practice and have results in every WCA event; one of my overall goals is to eventually be a platinum member, and so far I've made it up to bronze (which corresponds to at least a single result in every event). You can find the rest of my official results on my <a href="https://www.worldcubeassociation.org/persons/2013GOOD01" target="_blank">WCA profile</a>. I've also speedsolved some unofficial events in the past; my favorite is Redi Cube, but I also enjoy Curvy Copter, cuboids like 3x3x5, Kibiminx, and the Mirror Cube, among other events. I've always been an advocate for more events in the WCA, and these would be some of my top choices.
 						<br/><br/>
-						As far as non-cubing hobbies go, I love listening to rap music as well as recording some of my own; you can check out some of my stuff on <a href="" target="_blank">Soundcloud</a> and <a href="" target="_blank">Spotify</a>. I also play a lot of NES Tetris, and although I'm not at a competitive level yet (PB is 536,340 points on level 18), I hope to keep improving and maybe compete someday. As far as my personal life goes, I'm currently pursuing a Computer Science degree at Princeton University, and I also enjoy programming a lot in my free time. In the future I hope to pursue a career like software development that involves programming to some degree. I'm also pursuing a certificate in Spanish; I love the language a lot and hope to continue practicing after I graduate.
+						As far as non-cubing hobbies go, I love listening to rap music as well as recording some of my own; you can check out some of my stuff on <a href="https://soundcloud.com/tracebackdmg" target="_blank">Soundcloud</a> and <a href="https://open.spotify.com/artist/0ua7EZZWMPqOwk9h6smKXw" target="_blank">Spotify</a>. I also play a lot of NES Tetris, and although I'm not at a competitive level yet (PB is 536,340 points on level 18), I hope to keep improving and maybe compete someday. As far as my personal life goes, I'm currently pursuing a Computer Science degree at Princeton University, and I also enjoy programming a lot in my free time. In the future I hope to pursue a career like software development that involves programming to some degree. I'm also pursuing a certificate in Spanish; I love the language a lot and hope to continue practicing after I graduate.
 						<br/><br/>
-						If you want to reach out, you can e-mail me at <a href="mailto:dgcubed@gmail.com" target="_blank">dgcubed@gmail.com</a> or comment on any of my videos or Twitch streams. I do read most of the comments I get, and I try to reply to as many as possible! If you read this far, thanks for checking out this website!
+						If you want to reach out, you can e-mail me at <a href="mailto:dgcubed@gmail.com" target="_blank">dgcubed@gmail.com</a> or comment on any of my videos or Twitch streams. I do read most of the comments I get, and I try to reply to as many as possible! Note that the only official DGCubes social media accounts are on <a href="https://www.youtube.com/DGCubes" target="_blank">YouTube</a>, <a href="https://www.facebook.com/DGCubes/" target="_blank">Facebook</a>, and <a href="https://www.twitch.tv/dgcubeslive" target="_blank">Twitch</a>; if you find any others, they're not legitimate. 
+						<br/><br/>
+						If you read this far, thanks for checking out this website!
 		            </div>
 		        </div>
 		    </article>		
@@ -87,42 +112,6 @@
 				<span class="text-muted"><a href="#" class="text-muted">DGCubes</a> - Daniel Goodman</span>
 			</div>
 		</footer>
-
-		<script type="text/javascript">
-			google.load("visualization", "1", {packages:["corechart"]});
-			google.setOnLoadCallback(drawSheetName);
-
-			function drawSheetName() {
-				// Selects the columns to be extracted
-				var queryString = encodeURIComponent('SELECT D, E, L, M');
-
-				// Change headers=1 to headers=0 to include the first row
-				var query = new google.visualization.Query('https://docs.google.com/spreadsheets/d/1mSxqu3QTCRvVPWbFbMAZXrXkcaVbpnAqyyryCMwHqk0/gviz/tq?gid=0&headers=1&tq=' + queryString); 
-				query.send(handleSampleDataQueryResponse);
-			}
-
-			function handleSampleDataQueryResponse(response) {
-				var data = response.getDataTable();
-				
-				var comps = data.getValue(0,0); // (row, column)
-				var solves = data.getValue(0,1);
-				var ranking = data.getValue(11,3);
-				var average = data.getValue(11,2);
-				
-				var suffixList = ["th","st","nd","rd","th","th","th","th","th","th"];
-				
-				var rankingSuffix = suffixList[ranking % 10];
-				
-				if (ranking % 100 > 10 && ranking % 100 < 14) {
-					rankingSuffix = "th";
-				}
-				
-				document.getElementById("solves").innerHTML = solves;
-				document.getElementById("comps").innerHTML = comps;
-				document.getElementById("ranking").innerHTML = ranking + rankingSuffix;
-				document.getElementById("average").innerHTML = average;
-			}
-		</script>
 
 		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 		<script>window.jQuery || document.write('<script src="/docs/4.5/assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="https://getbootstrap.com/docs/4.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-1CmrxMRARb6aLqgBO7yyAxTOQE2AKb9GfXnEo760AUcUmFx3ibVJJAzGytlQcNXd" crossorigin="anonymous"></script>
