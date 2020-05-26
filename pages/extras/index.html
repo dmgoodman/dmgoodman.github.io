@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="description" content="DGCubes is a YouTube channel dedicated to speedsolving the Rubik's Cube, which features entertainment videos, reviews, unboxings, and a bunch of other types of videos! On this website, you can check out my PBs, mains, averages, and more.">
+		<meta name="keywords" content="Cubing,Rubik's Cube,Speedcubing,Speedsolving,Rubik's,Rubix,DGCubes,Cube,Daniel Goodman,Cuber,Speedcuber,YouTube">
+		<meta name="author" content="Daniel Goodman">
+		<title>Extras</title>
+
+		<!-- Bootstrap core CSS -->
+		<link href="https://getbootstrap.com/docs/4.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+		<!-- Favicons -->
+		<link rel="shortcut icon" href="../../static/img/DGCubes.ico">
+		
+		<!-- Custom styles for this template -->
+		<link href="https://getbootstrap.com/docs/4.5/examples/navbar-fixed/navbar-top-fixed.css" rel="stylesheet">
+		<link href="../../static/css/navbar-footer.css" rel="stylesheet">
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script>
+			$(function () {
+				$(document).scroll(function () {
+					var $nav = $(".fixed-top");
+					$nav.toggleClass('scrolled', $(this).scrollTop() > $nav.height());
+				});
+			});
+		</script>
+
+		<style>
+			.custom-form-control {
+			    height: calc(1.5em + .75rem + 2px);
+			    padding: .375rem .75rem;
+			    font-size: 1rem;
+			    font-weight: 400;
+			    line-height: 1.5;
+			    color: #495057;
+			    background-color: #fff;
+			    background-clip: padding-box;
+			    border: 1px solid #ced4da;
+			    border-radius: .25rem;
+			    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+			}
+		</style>
+
+	</head>
+
+	<body>
+
+		<!-- Navbar common to all pages -->
+		<nav class="navbar navbar-expand-md navbar-dark fixed-top">
+			<a class="navbar-brand" href="../../"><img src="../../static/img/DGCubes.png" style="width:30px;" alt="Logo"></a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarCollapse">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item px-2 border-left">
+						<a class="nav-link" href="../../">Home</a>
+					</li>
+					<li class="nav-item px-2 border-left">
+						<a class="nav-link" href="../pb">Mains and PBs</a>
+					</li>
+					<li class="nav-item active px-2 border-left">
+						<a class="nav-link" href="#">Extras</a>
+					</li>
+					<li class="nav-item px-2 border-left">
+						<a class="nav-link" href="../l4e">L4E Trainer</a>
+					</li>
+					<li class="nav-item px-2 border-left">
+						<a class="nav-link" href="https://www.youtube.com/DGCubes" target="_blank">YouTube Channel</a>
+					</li>
+					<li class="nav-item px-2 border-left">
+						<a class="nav-link" href="../about">About Me</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+
+		<main role="main" class="container">
+            <div>
+                <br/>
+				<h1 class="text-center">Here are some extras and downloads!</h1>
+				<br/>
+				<p>
+					My most recent cubing-related programming project is this <a href="fmc" target="_blank">Insertion Trainer</a> for Fewest Moves practice. This program allows you to practice insertions by giving you a scramble and a skeleton. Your goal is to find the optimal insertion to get the most points. If you're an FMC solver, make sure to give it a try!
+				</p>
+				<p>
+					This is a <a href="redi/sim" target="_blank">Redi Cube simulator</a> and corresponding <a href="redi/scrambler" target="_blank">full-fledged Redi Cube scrambler</a>! The scrambler is random state and was originally made by xyzzy on the Speedsolving forums; I just adapted it to also show a picture of the puzzle for each scramble. It generates five scrambles in a similar format to TNoodle, and allows the user to easily print them as well. Unfortunately as of now, the images look more like a 3x3 than a Redi Cube, due to the centers not being split among the four surrounding edges. However, the centers are actually transparent, not white, so they are just meant to be ignored for now.
+				</p>
+				<p>
+					Hidden on this site, you'll also find <a href="breakout" target="_blank">this browser-based game of Atari Breakout</a>. It's my second ever game, and it's got a decent amount of features, such as different colored blocks for different levels, a points system, and an extra life for every 10,000 points. I'd like to add more in the future to make it follow the laws of physics better, but this is all I've got for now.
+				</p>
+				<p>
+					Another game hidden on the site is <a href="pong" target="_blank">this browser-based game of Pong</a>. It's the first game I ever programmed, so I decided to keep it simple, but it can still be pretty fun. It currently supports both 1 and 2-player games.
+				</p>
+				<p>
+					Developed by Goodie and Luke (me and a friend) is a <a href="sam" target="_blank">Samchillian Tip Tip Tip Cheeepeeeee</a> simulator. The Samchillian is a musical instrument that, instead of having each key specific to a note, each key is specific to an increment. Therefore, things like scales can be played by pressing the same key multiple times. We did not invent this instrument, although we did spend a couple hours in an afternoon programming this version of it. As of now, it only supports the C-major scale, but we hope to add more scales (as well as more features) in the future. To play a recognizable theme from The Legend Of Zelda: Ocarina Of Time, simply type these notes while on the page:
+					<br/>
+					l k j s k j s k j l f d j f d d f j k d j k j s k j s k j l f d j k s d k d s j
+				</p>
+            </div>	
+		</main>
+
+		<footer class="footer">
+			<div class="container">
+				<span class="text-muted"><a href="https://www.youtube.com/DGCubes" target="_blank">DGCubes</a> - Daniel Goodman</span>
+			</div>
+		</footer>
+
+		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+		<script>window.jQuery || document.write('<script src="/docs/4.5/assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="https://getbootstrap.com/docs/4.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-1CmrxMRARb6aLqgBO7yyAxTOQE2AKb9GfXnEo760AUcUmFx3ibVJJAzGytlQcNXd" crossorigin="anonymous"></script>
+	</body>
+</html>

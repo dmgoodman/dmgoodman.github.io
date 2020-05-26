@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="description" content="DGCubes is a YouTube channel dedicated to speedsolving the Rubik's Cube, which features entertainment videos, reviews, unboxings, and a bunch of other types of videos! On this website, you can check out my PBs, mains, averages, and more.">
+		<meta name="keywords" content="Cubing,Rubik's Cube,Speedcubing,Speedsolving,Rubik's,Rubix,DGCubes,Cube,Daniel Goodman,Cuber,Speedcuber,YouTube">
+		<meta name="author" content="Daniel Goodman">
+		<title>DGCubes</title>
+
+		<!-- Bootstrap core CSS -->
+		<link href="https://getbootstrap.com/docs/4.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+		<!-- Favicons -->
+		<link rel="shortcut icon" href="../../static/img/DGCubes.ico">
+		
+		<!-- Custom styles for this template -->
+		<link href="https://getbootstrap.com/docs/4.5/examples/navbar-fixed/navbar-top-fixed.css" rel="stylesheet">
+		<link href="../../static/css/navbar-footer.css" rel="stylesheet">
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script>
+			$(function () {
+				$(document).scroll(function () {
+					var $nav = $(".fixed-top");
+					$nav.toggleClass('scrolled', $(this).scrollTop() > $nav.height());
+				});
+			});
+		</script>
+
+		<style>
+			.custom-form-control {
+			    height: calc(1.5em + .75rem + 2px);
+			    padding: .375rem .75rem;
+			    font-size: 1rem;
+			    font-weight: 400;
+			    line-height: 1.5;
+			    color: #495057;
+			    background-color: #fff;
+			    background-clip: padding-box;
+			    border: 1px solid #ced4da;
+			    border-radius: .25rem;
+			    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+			}
+		</style>
+
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<script type="text/javascript">
+			google.load("visualization", "1", {packages:["corechart"]});
+			google.setOnLoadCallback(drawSheetName);
+
+			function drawSheetName() {
+				//Selects the columns to be extracted
+				var queryString = encodeURIComponent('SELECT B, C, D, E, F, G, H, I, J, K, L, M, N');
+
+				//Change headers=1 to headers=0 to include the first row
+				var query = new google.visualization.Query('https://docs.google.com/spreadsheets/d/1Bvyksa6J_25ciXkU69vmrVcp38jZO-ENuIqZANwJwIs/gviz/tq?gid=0&headers=1&tq=' + queryString); 
+				query.send(handleDataQueryResponse);
+			}
+
+			function handleDataQueryResponse(response) {
+				var data = response.getDataTable();
+				
+				var events = ["222","333","444","555","666","777","pyram","minx","sq1","skewb","333oh","333bf","444bf","555bf","333mbf","333ft","333fm","clock"];
+
+				var event = document.getElementById("event");
+				var eventcode = event.options[event.selectedIndex].value;
+				var eventnum = events.indexOf(eventcode);
+				if (eventnum < 0) eventnum = 1;
+
+				var eventname = event.options[event.selectedIndex].text;
+				document.getElementById("eventname").innerHTML = eventname;
+				var globalavg = data.getValue(eventnum, 8);
+				document.getElementById("global").innerHTML = globalavg;
+				var main = data.getValue(eventnum, 9);
+				document.getElementById("main").innerHTML = main;
+				var method = data.getValue(eventnum, 10);
+				document.getElementById("method").innerHTML = method;
+				var single = data.getValue(eventnum, 0);
+				document.getElementById("single").innerHTML = single;
+				var mo3 = data.getValue(eventnum, 2);
+				document.getElementById("mo3").innerHTML = mo3;
+				var ao5 = data.getValue(eventnum, 3);
+				document.getElementById("ao5").innerHTML = ao5;
+				var ao12 = data.getValue(eventnum, 4);
+				document.getElementById("ao12").innerHTML = ao12;
+				var ao50 = data.getValue(eventnum, 5);
+				document.getElementById("ao50").innerHTML = ao50;
+				var ao100 = data.getValue(eventnum, 6);
+				document.getElementById("ao100").innerHTML = ao100;
+				var ao1000 = data.getValue(eventnum, 7);
+				document.getElementById("ao1000").innerHTML = ao1000;
+
+				var wcasingle = data.getValue(eventnum, 11);
+				document.getElementById("wcasingle").innerHTML = wcasingle;
+				var wcaaverage = data.getValue(eventnum, 12);
+				document.getElementById("wcaaverage").innerHTML = wcaaverage;
+			}
+		</script>
+
+	</head>
+
+	<body>
+
+		<!-- Navbar common to all pages -->
+		<nav class="navbar navbar-expand-md navbar-dark fixed-top">
+			<a class="navbar-brand" href="../../"><img src="../../static/img/DGCubes.png" style="width:30px;" alt="Logo"></a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarCollapse">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item px-2 border-left">
+						<a class="nav-link" href="../../">Home</a>
+					</li>
+					<li class="nav-item active px-2 border-left">
+						<a class="nav-link" href="#">Mains and PBs</a>
+					</li>
+					<li class="nav-item px-2 border-left">
+						<a class="nav-link" href="../extras">Extras</a>
+					</li>
+					<li class="nav-item px-2 border-left">
+						<a class="nav-link" href="../l4e">L4E Trainer</a>
+					</li>
+					<li class="nav-item px-2 border-left">
+						<a class="nav-link" href="https://www.youtube.com/DGCubes" target="_blank">YouTube Channel</a>
+					</li>
+					<li class="nav-item px-2 border-left">
+						<a class="nav-link" href="../about">About Me</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+
+		<main role="main" class="container">
+
+			<div class="row">
+				<div class="col-lg-8">
+				    <h1><span id="eventname">3x3x3 Cube</span> - <span id="global">loading</span> global average</h1>
+				</div>
+				<div class="col-lg-4 text-right">
+				    <label for="event"><h5>Event:&nbsp;</h5></label>
+				    <select name="event" id="event" class="custom-form-control mt-3" onchange="drawSheetName()">
+				    	<option value="333">3x3x3 Cube</option>
+				    	<option value="222">2x2x2 Cube</option>
+				    	<option value="444">4x4x4 Cube</option>
+				    	<option value="555">5x5x5 Cube</option>
+				    	<option value="666">6x6x6 Cube</option>
+				    	<option value="777">7x7x7 Cube</option>
+				    	<option value="333bf">3x3x3 Blindfolded</option>
+				    	<option value="333fm">3x3x3 Fewest Moves</option>
+				    	<option value="333oh">3x3x3 One-Handed</option>
+				    	<option value="clock">Clock</option>
+				    	<option value="minx">Megaminx</option>
+				    	<option value="pyram">Pyraminx</option>
+				    	<option value="skewb">Skewb</option>
+				    	<option value="sq1">Square-1</option>
+				    	<option value="444bf">4x4x4 Blindfolded</option>
+						<option value="555bf">5x5x5 Blindfolded</option>
+				    	<option value="333mbf">3x3x3 Multi-Blind</option>
+				    	<option value="333ft">3x3x3 With Feet</option>
+				    </select>
+				    <br/><br/><br/>
+				</div>
+			</div>
+
+			<div class="mt-3">
+				<h2>Main: <span id="main">--</span></h2>
+				<h2>Method: <span id="method">--</span></h2>
+			</div>
+
+			<br/>
+
+			<div class="row">
+				<div class="col-5">
+					<h2>Personal Bests:</h2>
+				</div>
+				<div class="col-7">
+					<h2>Personal Records:</h2>
+				</div>
+			</div>
+		    <div class="row mt-3">
+				<div class="col-2 text-right">
+					<h4 class="mb-3">Single</h4>
+					<h4 class="mb-3">Mo3</h4>
+					<h4 class="mb-3">Ao5</h4>
+					<h4 class="mb-3">Ao12</h4>
+					<h4 class="mb-3">Ao50</h4>
+					<h4 class="mb-3">Ao100</h4>
+					<h4 class="mb-3">Ao1000</h4>
+				</div>
+				<div class="col-3 text-left">
+					<h4 class="mb-3"><span id="single">--</span></h4>
+					<h4 class="mb-3"><span id="mo3">--</span></h4>
+					<h4 class="mb-3"><span id="ao5">--</span></h4>
+					<h4 class="mb-3"><span id="ao12">--</span></h4>
+					<h4 class="mb-3"><span id="ao50">--</span></h4>
+					<h4 class="mb-3"><span id="ao100">--</span></h4>
+					<h4 class="mb-3"><span id="ao1000">--</span></h4>
+				</div>
+				<div class="col-2 text-right">
+					<h4 class="mb-3">Single</h4>
+					<h4 class="mb-3">Average</h4>
+				</div>
+				<div class="col-5 text-left">
+					<h4 class="mb-3"><span id="wcasingle">--</span></h4>
+					<h4 class="mb-3"><span id="wcaaverage">--</span></h4>
+				</div>
+			</div>
+		</main>
+
+		<footer class="footer">
+			<div class="container">
+				<span class="text-muted"><a href="https://www.youtube.com/DGCubes" target="_blank">DGCubes</a> - Daniel Goodman</span>
+			</div>
+		</footer>
+
+		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+		<script>window.jQuery || document.write('<script src="/docs/4.5/assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="https://getbootstrap.com/docs/4.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-1CmrxMRARb6aLqgBO7yyAxTOQE2AKb9GfXnEo760AUcUmFx3ibVJJAzGytlQcNXd" crossorigin="anonymous"></script>
+	</body>
+</html>
