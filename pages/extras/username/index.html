@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="description" content="DGCubes is a YouTube channel dedicated to speedsolving the Rubik's Cube, which features entertainment videos, reviews, unboxings, and a bunch of other types of videos! On this website, you can check out my PBs, mains, averages, and more.">
+		<meta name="keywords" content="Cubing,Rubik's Cube,Speedcubing,Speedsolving,Rubik's,Rubix,DGCubes,Cube,Daniel Goodman,Cuber,Speedcuber,YouTube">
+		<meta name="author" content="Daniel Goodman">
+		<title>Username Leaderboard</title>
+
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<script type="text/javascript">
+			google.load("visualization", "1", {packages:["corechart"]});
+			google.setOnLoadCallback(drawSheetName);
+
+			function drawSheetName() {
+				//Selects the columns to be extracted
+				var queryString = encodeURIComponent('SELECT A, B');
+
+				//Change headers=1 to headers=0 to include the first row
+				var query = new google.visualization.Query('https://docs.google.com/spreadsheets/d/1kxgdBNJUFhHDwA9p39jqCnh7gy8bWf7YAzAmpo4Nimk/gviz/tq?gid=0&headers=1&tq=' + queryString); 
+				query.send(handleQueryResponse);
+			}
+
+			function handleQueryResponse(response) {
+				var data = response.getDataTable();
+
+				data.sort({column: 1, desc:true});
+
+				var num_rows = data.getNumberOfRows();
+
+				var html = "";
+				for (var i = 0; i < num_rows; i+=1) html += data.getValue(i, 0) + " - " + data.getValue(i, 1) + "/10<br/>";				
+
+				document.getElementById("usernamelist").innerHTML = html;				
+			}
+		</script>
+
+	</head>
+
+	<body>
+		<main role="main" class="container">
+			<br/>
+			<span id="usernamelist"></span>
+		</main>
+
+		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+		<script>window.jQuery || document.write('<script src="/docs/4.5/assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="https://getbootstrap.com/docs/4.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-1CmrxMRARb6aLqgBO7yyAxTOQE2AKb9GfXnEo760AUcUmFx3ibVJJAzGytlQcNXd" crossorigin="anonymous"></script>
+	</body>
+</html>
