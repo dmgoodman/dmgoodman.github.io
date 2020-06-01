@@ -15,8 +15,12 @@
 
 		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 		<script type="text/javascript">
+			var data;
 			google.load("visualization", "1", {packages:["corechart"]});
 			google.setOnLoadCallback(drawSheetName);
+
+			var set = 0; // Represents the set of 46 usernames to be displayed - set 0 refers to the top 42 usernames
+			var interval = setInterval(showData, 3000);
 
 			function drawSheetName() {
 				//Selects the columns to be extracted
@@ -28,23 +32,36 @@
 			}
 
 			function handleQueryResponse(response) {
-				var data = response.getDataTable();
-
+				data = response.getDataTable();
 				data.sort({column: 1, desc:true});
+				showData();
+			}
 
+			function showData() {
 				var num_rows = data.getNumberOfRows();
 
-				var html = "";
-				for (var i = 0; i < 10; i+=1) html += data.getValue(i, 0) + " - " + data.getValue(i, 1) + "/10<br/>";
-				document.getElementById("usernamelist1").innerHTML = html;
+				var e1 = document.getElementById("usernamelist1");
+				var e2 = document.getElementById("usernamelist2");
+				var e3 = document.getElementById("usernamelist3");
 
-				var html = "";
-				for (var i = 10; i < 26; i+=1) html += data.getValue(i, 0) + " - " + data.getValue(i, 1) + "/10<br/>";
-				document.getElementById("usernamelist2").innerHTML = html;
+				e1.innerHTML = "";
+				e2.innerHTML = "";
+				e3.innerHTML = "";
+				for (let i = 0; i < 46; i+=1) {
+					let cur = set * 46 + i;
+					if (cur < num_rows) {
+						if (i % 46 < 10) {
+							e1.innerHTML += "<b>" + (cur + 1) + ". </b>" + data.getValue(cur, 0) + " - " + data.getValue(cur, 1) + "/10<br/>";
+						} else if (i % 46 < 28) {
+							e2.innerHTML += "<b>" + (cur + 1) + ". </b>" + data.getValue(cur, 0) + " - " + data.getValue(cur, 1) + "/10<br/>";
+						} else {
+							e3.innerHTML += "<b>" + (cur + 1) + ". </b>" + data.getValue(cur, 0) + " - " + data.getValue(cur, 1) + "/10<br/>";
+						}
+					}
+				}
 
-				var html = "";
-				for (var i = 26; i < num_rows; i+=1) html += data.getValue(i, 0) + " - " + data.getValue(i, 1) + "/10<br/>";
-				document.getElementById("usernamelist3").innerHTML = html;		
+				set += 1;
+				if (set * 42 > num_rows) set = 0;
 			}
 		</script>
 
@@ -58,7 +75,7 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-5" style="padding-right:0px;">
+				<div class="col-5" style="padding-left:20px;padding-right:0px;">
 					<span id="usernamelist1"></span>
 				</div>
 				<div class="col-4" style="padding-left:0px;padding-right:0px;">
