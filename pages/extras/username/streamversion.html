@@ -20,13 +20,12 @@
 			google.setOnLoadCallback(drawSheetName);
 
 			var set = 0; // Represents the set of 46 usernames to be displayed - set 0 refers to the top 42 usernames
-			var interval = setInterval(showData, 3000);
+			var interval = setInterval(showData, 3000); // Iterate through sets every 3 seconds
 
 			function drawSheetName() {
 				//Selects the columns to be extracted
 				var queryString = encodeURIComponent('SELECT A, B');
 
-				//Change headers=1 to headers=0 to include the first row
 				var query = new google.visualization.Query('https://docs.google.com/spreadsheets/d/1kxgdBNJUFhHDwA9p39jqCnh7gy8bWf7YAzAmpo4Nimk/gviz/tq?gid=0&headers=1&tq=' + queryString); 
 				query.send(handleQueryResponse);
 			}
