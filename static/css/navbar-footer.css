@@ -1,11 +1,13 @@
 html {
 	position: relative;
 	min-height: 100%;
+	overflow-x: hidden;
+	scroll-behavior: smooth;
 }
 
 body {
 	margin-bottom: 60px; /* Margin bottom by footer height */
-	background-color:#f0ffff;
+	background-color: #f0ffff;
 }
 
 .footer {
