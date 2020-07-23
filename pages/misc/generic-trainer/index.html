@@ -3,13 +3,18 @@
 	<head>
 		<title>Generic Trainer</title>
 		
+		<link rel="stylesheet" type="text/css" href="switch.css">
+
 		<!--CODE ADAPTED FROM https://productforums.google.com/forum/#!topic/docs/RMKFBdfd3t4-->
 		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 		<script type="text/javascript">
 			var cases = [];
 			var names = [];
+			var available_cases = [];
+			var available_names = [];
 			var data;
-		
+			var eachOneOnce = true;
+
 			google.load("visualization", "1", {packages:["corechart"]});
 			google.setOnLoadCallback(drawSheetName);
 
@@ -31,6 +36,8 @@
 					if (data.getValue(i,0) == "Y") {
 						names.push(data.getValue(i,1));
 						cases.push(data.getValue(i,2));
+						available_names.push(data.getValue(i,1));
+						available_cases.push(data.getValue(i,2));
 					}
 				}
 				
@@ -47,18 +54,34 @@
 			var scrambles = [];
 			
 			function randomCase() {
-				var rand = Math.floor(Math.random() * cases.length);
-				
-				var returnValue = flip[Math.floor(Math.random() * flip.length)] + auf[Math.floor(Math.random() * auf.length)] + " " + adf[Math.floor(Math.random() * adf.length)] + " " + 
-					cases[rand] + " " + auf[Math.floor(Math.random() * auf.length)] + " " + adf[Math.floor(Math.random() * adf.length)];
-				document.getElementById("setUp").innerHTML = "Scramble: " + returnValue;
-				scrambles.push(names[rand]);
+				if (eachOneOnce) {
+					var rand = Math.floor(Math.random() * available_cases.length);
+					
+					var returnValue = flip[Math.floor(Math.random() * flip.length)] + auf[Math.floor(Math.random() * auf.length)] + " " + adf[Math.floor(Math.random() * adf.length)] + " " + 
+						available_cases[rand] + " " + auf[Math.floor(Math.random() * auf.length)] + " " + adf[Math.floor(Math.random() * adf.length)];
+					document.getElementById("setUp").innerHTML = "Scramble: " + returnValue;
+					scrambles.push(available_names[rand]);
+					available_names.splice(rand, 1);
+					available_cases.splice(rand, 1);
+					if (available_cases.length == 0) {
+						available_cases = cases.slice();
+						available_names = names.slice();
+					}
+				} else {
+					var rand = Math.floor(Math.random() * cases.length);
+					
+					var returnValue = flip[Math.floor(Math.random() * flip.length)] + auf[Math.floor(Math.random() * auf.length)] + " " + adf[Math.floor(Math.random() * adf.length)] + " " + 
+						cases[rand] + " " + auf[Math.floor(Math.random() * auf.length)] + " " + adf[Math.floor(Math.random() * adf.length)];
+					document.getElementById("setUp").innerHTML = "Scramble: " + returnValue;
+					scrambles.push(names[rand]);
+				}
+
 			}
 
 			var state = "idle"; // states can be "idle", "starting", "timing"
 			var stopTime = Date.now();
 			document.addEventListener("keydown",function(event){
-				if (state == "idle" && Date.now() > stopTime + 1000) {
+				if (state == "idle" && Date.now() > stopTime + 500) {
 					state = "starting";
 					document.getElementById("timer").style.color = "green";
 				} else if (state == "timing") {
@@ -256,11 +279,33 @@
 				<td>
 					<br/>
 					How to use:
-					<br/>Press the spacebar or tap the screen to start or stop the timer. Your times will automatically be recorded and averaged on the right. If any times are a +2 second penalty or DNF, click on the
-					appropriate choice beneath the timer to apply the penalty. To delete all of your times, click on the X on the right of the screen. To delete a single time, click on it once.
+					<br/>Press any key to start and stop the timer. Your times will automatically be recorded and averaged on the right. If any times are a +2 second penalty or DNF, click on the appropriate choice beneath the timer to apply the penalty. To delete all of your times, click on the X on the right of the screen. To delete a single time, click on it once.
 					<br/><br/>
+
+					<label class="switch">
+						<input type="checkbox" id="switchbox" checked="checked">
+						<span class="slider round"></span>
+					</label>
+					&nbsp;&nbsp;&nbsp;Go through all algs before starting again: <span id="checkvalue">ON</span>
 				</td>
 			</tr>
 		</table>
 	</body>
+
+	<script>
+		const switchbox = document.getElementById('switchbox');
+
+		switchbox.addEventListener('change', (event) => {
+			eachOneOnce = !eachOneOnce;
+			var temp = document.getElementById("checkvalue").innerHTML;
+			if (temp == "ON") {
+				document.getElementById("checkvalue").innerHTML = "OFF";
+				eachOneOnce = false;
+			} else {
+				document.getElementById("checkvalue").innerHTML = "ON";
+				eachOneOnce = true;
+			}
+		});
+	</script>
+
 </html>
