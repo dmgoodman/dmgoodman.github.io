@@ -19,10 +19,10 @@
 
 				//Change headers=1 to headers=0 to include the first row
 				var query = new google.visualization.Query('https://docs.google.com/spreadsheets/d/1GHtxBQm0rhEvudDzG4Z3noZOJb9eikcaMhNXS8ALWIg/gviz/tq?gid=0&headers=1&tq=' + queryString); 
-				query.send(handleSampleDataQueryResponse);
+				query.send(handleResponse);
 			}
 
-			function handleSampleDataQueryResponse(response) {
+			function handleResponse(response) {
 				data = response.getDataTable();
 				
 				var count = data.getValue(0,3);
@@ -37,8 +37,6 @@
 				randomCase();
 			}
 			
-			var timerOn = false;
-			var start = true;
 			var startTime = 0;
 			
 			var flip = ["flip ",""];
@@ -56,57 +54,54 @@
 				document.getElementById("setUp").innerHTML = "Scramble: " + returnValue;
 				scrambles.push(names[rand]);
 			}
-		
+
+			var state = "idle"; // states can be "idle", "starting", "timing"
+			var stopTime = Date.now();
 			document.addEventListener("keydown",function(event){
-				if (timerOn && event.which == 32) {
+				if (state == "idle" && Date.now() > stopTime + 1000) {
+					state = "starting";
+					document.getElementById("timer").style.color = "green";
+				} else if (state == "timing") {
+					state = "idle";
 					stopTimer();
 					document.getElementById("plusTwo").innerHTML = "+2";
 					document.getElementById("DNF").innerHTML = "DNF";
 					plusTwoed = false;
 					DNFed = false;
-				} else if (!timerOn && event.which == 32) {
-					document.getElementById("timer").style.color = "green";
 				}
 			});
 			
 			document.addEventListener("keyup",function(event){
-				if (!timerOn && start && event.which == 32) {
+				if (state == "starting") {
+					state = "timing";
 					document.getElementById("timer").style.color = "black";
 					startTimer();
-				} else if (!timerOn && !start && event.which == 32) {
-					start = true;
 				}
 			});
 			
 			function startTimer() {
-				d1 = new Date();
-				startTime = d1.getTime();
+				startTime = Date.now();
 				document.getElementById("timer").innerHTML = "running";
-				
-				timerOn = true;
 			}
 			
 			function stopTimer() {
-				d1 = new Date();
-				document.getElementById("timer").innerHTML = (d1.getTime() - startTime) / 1000;
+				stopTime = Date.now();
+				document.getElementById("timer").innerHTML = (stopTime - startTime) / 1000;
 				
-				times.push((d1.getTime() - startTime) / 1000);
+				times.push((stopTime - startTime) / 1000);
 				printTimes(false);
-				
-				timerOn = false;
-				start = false;
 				randomCase();
 			}
 			
 			function printTimes(deleted) {
 				var current = document.getElementById("times").innerHTML;
 				if (!deleted) {
-					document.getElementById("times").innerHTML = current + "<span id=\"a" + (times.length - 1) + "\" onclick=\"deleteTime(this)\"><br/>" + times[times.length - 1] + " - " + scrambles[scrambles.length - 1] + "</span>";
+					document.getElementById("times").innerHTML = "<span id=\"a" + (times.length - 1) + "\" onclick=\"deleteTime(this)\"><br/>" + times[times.length - 1] + " - " + scrambles[scrambles.length - 1] + "</span>" + current;
 				} else {
 					document.getElementById("times").innerHTML = "";
 					for (var i = 0; i < times.length; i++) {
 						current = document.getElementById("times").innerHTML;
-						document.getElementById("times").innerHTML = current + "<span id=\"a" + (i) + "\" onclick=\"deleteTime(this)\"><br/>" + times[i] + " - " + scrambles[i] + "</span>";
+						document.getElementById("times").innerHTML = "<span id=\"a" + (i) + "\" onclick=\"deleteTime(this)\"><br/>" + times[i] + " - " + scrambles[i] + "</span>" + current;
 					}
 				}
 				
@@ -122,7 +117,6 @@
 					document.getElementById("info").innerHTML = "<a onclick=\"deleteAll()\" style=\"text-decoration:underline;\">x</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Times: " + (times.length - countDNFs()) + "/" + times.length + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mean: N/A";
 				}			
 			}
-			
 			
 			function deleteTime(htmlElement) {
 				if (confirm("This will delete the time you clicked on. Are you sure you want to proceed?")) {
