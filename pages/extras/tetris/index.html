@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Tetris Tracker</title>
+
+		<!-- Bootstrap core CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+		<!-- Icons -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+		<style>
+			body {
+				font-family:Arial;
+			}
+
+			i {
+				font-size:40px;
+			}
+
+			i:hover {
+				cursor:pointer;
+				color:grey;
+				transition:color 0.25s;
+			}
+
+			.modal-body {
+				max-height:50vh;
+				overflow-y:auto;
+			}
+		</style>
+
+		<script>
+			var AVERAGES = [5, 12];
+		</script>
+	</head>
+
+	<body>
+		<div class="row">
+			<div class="col-6 text-left h1" data-toggle="modal" data-target="#settings"><i class="fa fa-cog pl-1"></i></div>
+			<div class="col-6 text-right h1" data-toggle="modal" data-target="#about"><i class="fa fa-info-circle pr-1"></i></div>
+		</div>
+
+		<!-- Settings modal -->
+		<div class="modal fade" id="settings" role="dialog">
+			<div class="modal-dialog">
+
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Settings</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body">
+						<h5>Averages:</h5>
+							&nbsp;&nbsp;Average 1: <input id="a1" type="number" value=5><br>
+							&nbsp;&nbsp;Average 2: <input id="a2" type="number" value=12><br>
+							<button>Update</button>
+
+						<br><br>
+
+						<h5>Export scores:</h5>
+							<button onclick="download()">Export to file</button>
+
+						<br><br>
+
+						<h5>Import scores:</h5>
+							<input type="file" id="file">
+					</div>
+					<div class="modal-footer">
+						<button type="button" data-dismiss="modal">OK</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Help modal -->
+		<div class="modal fade" id="about" role="dialog">
+			<div class="modal-dialog">
+
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">About</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body">
+						<h5>Intro</h5>
+						I made this.<br><br>
+						<h5>Whatzit do</h5>
+						This is a score tracker for Tetris (or theoretically any score-based game).
+						You can enter your scores in the big ol' box on the left, and they'll be
+						added to the lil ol' table on the right. Your averages will also be shown - 
+						these are arithmetic means so don't expect me to drop your worst scores or
+						anything like that.<br><br>
+						<h5>How to delete</h5>
+						Oh my goodness! You wanna delete a score, eh? Well that's no problem! Simply
+						click on the score in the table on the right, and it'll be outta your hair
+						just like that!<br><br>
+						<h5>Delete 'em all</h5>
+						What the heck? You seriously wanna get rid of all your scores? Well I don't
+						blame you if we're being honest, I wouldn't wanna look at scores that bad
+						either. Click anywhere on the header of the table (with the "score" and
+						average labels) and we'll kick those under the rug.<br><br>
+						<h5>Download my scores</h5>
+						Okay okay, quick! Click off of here, click on the cog in the top left of the
+						screen, click "Export to file", and it'll download automatically. But hurry
+						up, we're running out of time!<br><br>
+						<h5>Gimme my scores back</h5>
+						Aha, so you've come crawling back, eh? You really think you deserve your
+						scores back after how brutally clicked that X last time you left the page?
+						Well... alright. If you exported your scores last time, you can go back to
+						the cog in the top left, and click "Choose File" under "Import scores". Then
+						you can dig around your files to find your scores.<br><br>
+						<h5>Change the averages!!</h5>
+						Whoa there, calm down. If you don't want to show averages of 5 and 12, then
+						why don'tcha just click on the cog in the top left, change "Average 1" and
+						"Average 2" to the numbers you want, and then get the heck outta here.<br><br>
+					</div>
+					<div class="modal-footer">
+						<button type="button" data-dismiss="modal">OK</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="row">
+				<div class="col-12 text-center h1 mb-4">Tetris Tracker</div>
+			</div>
+			<div class="row">
+				<div class="col-9 text-center">
+					<input type="text" id="scoreinput" class="my-4 w-50" style="font-size:100px;">
+					<br><br>
+					
+					<br><br>
+					
+				</div>
+				<div class="col-3 text-center">
+					<h4>Tetris Tracker</h4>
+					<table class="table table-striped table-sm">
+						<thead id="thead">
+						</thead>
+						<tbody id="scores">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+
+		<script>
+			var input = document.getElementById("scoreinput");
+			var scores = document.getElementById("scores");
+
+			var scoresList = [];
+			var averageList = [];
+
+			function getScoresCopy() {
+				scoresCopy = [];
+				for (var i = 0; i < scoresList.length; i += 1) {
+					scoresCopy.push(scoresList[i]);
+				}
+
+				return scoresCopy;
+			}
+
+			function ins(value) {
+				scoresList.push(value);
+
+				var curAverages = [];
+				for (var i = 0; i < AVERAGES.length; i += 1) {
+					curAverages.push(NaN);
+					if (scoresList.length >= AVERAGES[i]) {
+						var sum = 0;
+						for (var j = 0; j < AVERAGES[i]; j++) {
+							sum += scoresList[scoresList.length - 1 - j];
+						}
+						curAverages[curAverages.length - 1] = Math.round(sum / AVERAGES[i]);
+					}
+				}
+
+				averageList.push(curAverages);
+				
+				var rowString = "<tr onclick='userDel(" + (scoresList.length - 1) + ")'><th>" + scoresList.length + "</th><td>" + value + "</td>";
+				for (var i = 0; i < curAverages.length; i += 1) {
+					if (!(isNaN(curAverages[i]))) {
+						rowString += "<td>" + curAverages[i] + "</td>";
+					} else {
+						rowString += "<td></td>";
+					}
+				}
+
+				rowString += "</td></tr>";
+				scores.innerHTML = rowString + scores.innerHTML;
+			}
+
+			function clear() {
+				scoresList = [];
+				averageList = [];
+				scores.innerHTML = "";
+			}
+
+			function userClear() {
+				var msg = "Are you sure you want to clear the entire session? This cannot be undone.";
+				if (confirm(msg)) clear();
+			}
+
+			function del(index) {
+				scoresCopy = getScoresCopy();
+
+				clear();
+				for (var i = 0; i < scoresCopy.length; i += 1) {
+					if (i !== index) {
+						ins(scoresCopy[i]);
+					}
+				}
+			}
+
+			function userDel(index) {
+				var msg = "Are you sure you want to delete score " + (index + 1) + "?";
+				if (confirm(msg)) del(index);
+			}
+
+			function download() {
+				var element = document.createElement('a');
+				element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(scoresList));
+				element.setAttribute('download', "scores.txt");
+
+				element.style.display = 'none';
+				document.body.appendChild(element);
+
+				element.click();
+
+				document.body.removeChild(element);
+			}
+
+			
+			// Handle file when import button pressed
+			document.getElementById("file").onchange = () => {
+				var file = document.getElementById("file").files[0];
+				if (file) {
+					var reader = new FileReader();
+					reader.readAsText(file, "UTF-8");
+					reader.onload = (event) => {
+						msg = "Are you sure you want to import these scores? This will overwrite any current scores.";
+						if (confirm(msg)) {
+							clear();
+							var toInsert = event.target.result.split(",");
+							for (var i = 0; i < toInsert.length; i += 1) {
+								var value = toInsert[i];
+								var isnum = /^\d+$/.test(value);
+								if (isnum) ins(parseInt(value));
+							}
+						}
+					};
+					reader.onerror = (event) => {
+						console.log("Failed to read this file");
+					};
+				}
+			};
+
+			function setUpTHead() {
+				thead = document.getElementById("thead");
+				theadString = "<tr onclick='userClear()'><th></th><th>score</th>";
+				for (var i = 0; i < AVERAGES.length; i += 1) {
+					theadString += "<th>ao" + AVERAGES[i] + "</th>";
+				}
+				theadString += "</tr>";
+				thead.innerHTML = theadString;
+			}
+
+			// Set up thead
+			setUpTHead();
+
+			// Handle Enter presses
+			input.addEventListener("keydown", function(event) {
+				if (event.keyCode === 13) {
+					var value = input.value;
+					var isnum = /^\d+$/.test(value);
+					if (isnum) ins(parseInt(value));
+					input.value = "";
+				}
+			});
+
+			// Handle average changes
+			var a1 = document.getElementById("a1");
+			a1.addEventListener("change", function() {
+				var value = a1.value;
+				var isnum = /^\d+$/.test(value);
+				if (isnum) AVERAGES[0] = parseInt(value);
+				scoresCopy = getScoresCopy();
+				clear();
+				for (var i = 0; i < scoresCopy.length; i += 1) {
+					ins(scoresCopy[i]);
+				}
+				setUpTHead();
+			});
+
+			var a2 = document.getElementById("a2");
+			a2.addEventListener("change", function() {
+				var value = a2.value;
+				var isnum = /^\d+$/.test(value);
+				if (isnum) AVERAGES[1] = parseInt(value);
+				scoresCopy = getScoresCopy();
+				clear();
+				for (var i = 0; i < scoresCopy.length; i += 1) {
+					ins(scoresCopy[i]);
+				}
+				setUpTHead();
+			});
+		</script>
+	</body>
+</html>
