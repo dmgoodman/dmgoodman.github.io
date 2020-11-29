@@ -95,40 +95,63 @@
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
 					</div>
 					<div class="modal-body">
+						<span onclick="playAudio(1)">
 						<h5>Intro</h5>
 						I made this.<br><br>
+						</span>
+
+						<span onclick="playAudio(2)">
 						<h5>Whatzit do</h5>
 						This is a score tracker for Tetris (or theoretically any score-based game).
 						You can enter your scores in the big ol' box on the left, and they'll be
 						added to the lil ol' table on the right. Your averages will also be shown - 
 						these are arithmetic means so don't expect me to drop your worst scores or
 						anything like that.<br><br>
+						</span>
+
+						<span onclick="playAudio(3)">
 						<h5>How to delete</h5>
 						Oh my goodness! You wanna delete a score, eh? Well that's no problem! Simply
 						click on the score in the table on the right, and it'll be outta your hair
-						just like that!<br><br>
+						just like that! *snap*<br><br>
+						</span>
+
+						<span onclick="playAudio(4)">
 						<h5>Delete 'em all</h5>
 						What the heck? You seriously wanna get rid of all your scores? Well I don't
 						blame you if we're being honest, I wouldn't wanna look at scores that bad
 						either. Click anywhere on the header of the table (with the "score" and
 						average labels) and we'll kick those under the rug.<br><br>
+						</span>
+
+						<span onclick="playAudio(5)">
 						<h5>Download my scores</h5>
 						Okay okay, quick! Click off of here, click on the cog in the top left of the
 						screen, click "Export to file", and it'll download automatically. But hurry
 						up, we're running out of time!<br><br>
+						</span>
+
+						<span onclick="playAudio(6)">
 						<h5>Gimme my scores back</h5>
 						Aha, so you've come crawling back, eh? You really think you deserve your
 						scores back after how brutally you clicked that X last time you left the
 						page? Well... alright. If you exported your scores last time, you can go
 						back to the cog in the top left, and click "Choose File" under "Import
 						scores". Then you can dig around your files to find your scores.<br><br>
+						</span>
+
+						<span onclick="playAudio(7)">
 						<h5>Change the averages!!</h5>
 						Whoa there, calm down. If you don't want to show averages of 5 and 12, then
 						why don'tcha just click on the cog in the top left, change "Average 1" and
 						"Average 2" to the numbers you want, and then get the heck outta here.<br><br>
+						</span>
+
+						<span onclick="playAudio(8)">
 						<h5>Save my scores</h5>
 						I can't do that from my end yet, but hopefully soon. For now just don't forget
 						to save often.<br><br>
+						</span>
 					</div>
 					<div class="modal-footer">
 						<button type="button" data-dismiss="modal">OK</button>
@@ -326,6 +349,18 @@
 				}
 				setUpTHead();
 			});
+		</script>
+
+		<!-- Audio set-up for info modal -->
+		<script>
+			var audios = [];
+			for (var i = 1; i <= 8; i += 1) {
+				audios.push(new Audio("audio" + i + ".wav"));
+			}
+
+			function playAudio(num) {
+				audios[num - 1].play();
+			}
 		</script>
 	</body>
 </html>
