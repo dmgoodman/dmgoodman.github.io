@@ -31,6 +31,13 @@
 				max-height:50vh;
 				overflow-y:auto;
 			}
+
+			tr:hover {
+				cursor:pointer;
+				background-color:#700000!important;
+				color:white;
+				transition:background-color 0.25s;
+			}
 		</style>
 
 		<script>
@@ -39,9 +46,9 @@
 	</head>
 
 	<body>
-		<div class="row">
+		<div class="row" style="margin-right:0px!important;">
 			<div class="col-6 text-left h1" data-toggle="modal" data-target="#settings"><i class="fa fa-cog pl-1"></i></div>
-			<div class="col-6 text-right h1" data-toggle="modal" data-target="#about"><i class="fa fa-info-circle pr-1"></i></div>
+			<div class="col-6 text-right h1" data-toggle="modal" data-target="#about"><i class="fa fa-info-circle"></i></div>
 		</div>
 
 		<!-- Settings modal -->
@@ -111,14 +118,17 @@
 						up, we're running out of time!<br><br>
 						<h5>Gimme my scores back</h5>
 						Aha, so you've come crawling back, eh? You really think you deserve your
-						scores back after how brutally clicked that X last time you left the page?
-						Well... alright. If you exported your scores last time, you can go back to
-						the cog in the top left, and click "Choose File" under "Import scores". Then
-						you can dig around your files to find your scores.<br><br>
+						scores back after how brutally you clicked that X last time you left the
+						page? Well... alright. If you exported your scores last time, you can go
+						back to the cog in the top left, and click "Choose File" under "Import
+						scores". Then you can dig around your files to find your scores.<br><br>
 						<h5>Change the averages!!</h5>
 						Whoa there, calm down. If you don't want to show averages of 5 and 12, then
 						why don'tcha just click on the cog in the top left, change "Average 1" and
 						"Average 2" to the numbers you want, and then get the heck outta here.<br><br>
+						<h5>Save my scores</h5>
+						I can't do that from my end yet, but hopefully soon. For now just don't forget
+						to save often.<br><br>
 					</div>
 					<div class="modal-footer">
 						<button type="button" data-dismiss="modal">OK</button>
@@ -238,6 +248,16 @@
 				document.body.removeChild(element);
 			}
 
+			function setUpTHead() {
+				thead = document.getElementById("thead");
+				theadString = "<tr onclick='userClear()'><th></th><th>score</th>";
+				for (var i = 0; i < AVERAGES.length; i += 1) {
+					theadString += "<th>ao" + AVERAGES[i] + "</th>";
+				}
+				theadString += "</tr>";
+				thead.innerHTML = theadString;
+			}
+
 			
 			// Handle file when import button pressed
 			document.getElementById("file").onchange = () => {
@@ -263,18 +283,12 @@
 				}
 			};
 
-			function setUpTHead() {
-				thead = document.getElementById("thead");
-				theadString = "<tr onclick='userClear()'><th></th><th>score</th>";
-				for (var i = 0; i < AVERAGES.length; i += 1) {
-					theadString += "<th>ao" + AVERAGES[i] + "</th>";
-				}
-				theadString += "</tr>";
-				thead.innerHTML = theadString;
-			}
-
 			// Set up thead
 			setUpTHead();
+
+			// Focus on input box
+			input.focus();
+			input.select();
 
 			// Handle Enter presses
 			input.addEventListener("keydown", function(event) {
