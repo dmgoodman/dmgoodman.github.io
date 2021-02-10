@@ -74,18 +74,18 @@
 
 		<script>
 			var videohtml = "<br>";
-			for (var i = 1; i <= 10; i++) {
+			for (var i = 1; i < 10; i++) {
 				videohtml += 	'<div class="row text-center"> \
 									<div class="col-md-6 px-4"> \
 										<div class="embed-responsive embed-responsive-16by9"> \
-											<iframe class="embed-responsive-item" src="https://www.youtube.com/embed?max-results=1&controls=1&showinfo=1&rel=0&list=PLDfuZjdEXuDUylOzkzmXytqZ4Y-IitIXB&index=' + (i * 2) + '" style="border:1px solid lightgrey;" allowfullscreen> \
+											<iframe class="embed-responsive-item" src="https://www.youtube.com/embed?max-results=1&controls=1&showinfo=1&rel=0&list=PLDfuZjdEXuDUylOzkzmXytqZ4Y-IitIXB&index=' + ((i * 2) - 1) + '" style="border:1px solid lightgrey;" allowfullscreen> \
 											</iframe> \
 										</div> \
 										<div class="d-md-none"><br><br></div> \
 									</div> \
 									<div class="col-md-6 px-4"> \
 										<div class="embed-responsive embed-responsive-16by9"> \
-											<iframe class="embed-responsive-item" src="https://www.youtube.com/embed?max-results=1&controls=1&showinfo=1&rel=0&list=PLDfuZjdEXuDUylOzkzmXytqZ4Y-IitIXB&index=' + ((i * 2) + 1) + '" style="border:1px solid lightgrey;" allowfullscreen> \
+											<iframe class="embed-responsive-item" src="https://www.youtube.com/embed?max-results=1&controls=1&showinfo=1&rel=0&list=PLDfuZjdEXuDUylOzkzmXytqZ4Y-IitIXB&index=' + (i * 2) + '" style="border:1px solid lightgrey;" allowfullscreen> \
 											</iframe> \
 										</div> \
 									</div> \
