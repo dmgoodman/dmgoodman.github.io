@@ -74,6 +74,18 @@
 				window.addEventListener("scroll", fadeInOnScroll);
 				fadeInOnScroll();
 			});
+
+			// The navbar resizes responsively
+			// Make sure body padding adjusts appropriately so top of body isn't hidden
+			document.addEventListener("DOMContentLoaded", function() {
+				adjustBodyPadding();
+				window.addEventListener("resize", adjustBodyPadding);
+
+				function adjustBodyPadding() {
+					const navbarHeight = document.getElementById("navbar").offsetHeight;
+					document.body.style.paddingTop = navbarHeight + "px";
+				}
+			});
 		</script>
 
 		<style>
@@ -83,7 +95,6 @@
 			}
 
 			body {
-				padding-top: 0px;
 				overflow-x: hidden;
 			}
 
